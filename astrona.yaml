@@ -1,8 +1,9 @@
-# Preparation scaffold. Technical pages stay draft until authoring and review.
+# Reading-only course. YAML assessments are registered separately in assessments/index.yaml.
 training:
   id: ATS044
   title: 'KCSA: Kubernetes Threat Model'
-  description: Preparation scaffold for Kubernetes Threat Model. Lessons and environments are planned.
+  description: Concept lessons, diagrams and original scenario assessments covering every published objective
+    in this KCSA domain. No labs or playgrounds.
   certification:
     name: Kubernetes and Cloud Native Security Associate
     code: KCSA
@@ -20,7 +21,7 @@ training:
 modules:
 - id: module-intro
   title: Introduction
-  description: Planned introduction and authoring status.
+  description: Audience, learning approach, reading requirements and contribution process.
   content:
   - type: reading
     title: Introduction
@@ -36,71 +37,124 @@ modules:
     path: sections/intro/course-03-how-this-course-is-made.md
 - id: module-010
   title: Kubernetes Trust Boundaries and Data Flow
-  description: Planned coverage of this curriculum objective.
+  description: Concept lessons and scenario reasoning for Kubernetes Trust Boundaries and Data Flow.
+  draft: true
   content:
   - type: reading
-    title: Section Overview
+    title: 'Kubernetes Trust Boundaries and Data Flow: Introduction'
     path: sections/section-010/README.md
   - type: reading
-    title: Kubernetes Trust Boundaries and Data Flow
+    title: Trust Boundaries And Security Data Flow
     path: sections/section-010/module-01/course.md
+  - type: reading
+    title: Tracing Authority Across The Platform
+    path: sections/section-010/module-01/course-01-tracing-authority-across-the-platform.md
+  - type: reading
+    title: Summary
+    path: sections/section-010/module-01/course-02-summary.md
 - id: module-020
   title: Persistence
-  description: Planned coverage of this curriculum objective.
+  description: Concept lessons and scenario reasoning for Persistence.
+  draft: true
   content:
   - type: reading
-    title: Section Overview
+    title: 'Persistence: Introduction'
     path: sections/section-020/README.md
   - type: reading
-    title: Persistence
+    title: Persistence After Workload Compromise
     path: sections/section-020/module-01/course.md
+  - type: reading
+    title: What Can Survive A Container Replacement
+    path: sections/section-020/module-01/course-01-what-can-survive-a-container-replacement.md
+  - type: reading
+    title: Summary
+    path: sections/section-020/module-01/course-02-summary.md
 - id: module-030
   title: Denial of Service
-  description: Planned coverage of this curriculum objective.
+  description: Concept lessons and scenario reasoning for Denial of Service.
+  draft: true
   content:
   - type: reading
-    title: Section Overview
+    title: 'Denial of Service: Introduction'
     path: sections/section-030/README.md
   - type: reading
-    title: Denial of Service
+    title: Denial Of Service And Shared Capacity
     path: sections/section-030/module-01/course.md
+  - type: reading
+    title: Bounding Work Without Assuming Perfect Availability
+    path: sections/section-030/module-01/course-01-bounding-work-without-assuming-perfect-availability.md
+  - type: reading
+    title: Summary
+    path: sections/section-030/module-01/course-02-summary.md
 - id: module-040
   title: Malicious Code Execution and Compromised Applications in Containers
-  description: Planned coverage of this curriculum objective.
+  description: Concept lessons and scenario reasoning for Malicious Code Execution and Compromised Applications
+    in Containers.
+  draft: true
   content:
   - type: reading
-    title: Section Overview
+    title: 'Malicious Code Execution and Compromised Applications in Containers: Introduction'
     path: sections/section-040/README.md
   - type: reading
-    title: Malicious Code Execution and Compromised Applications in Containers
+    title: Compromised Application Consequences
     path: sections/section-040/module-01/course.md
+  - type: reading
+    title: From Application Authority To Broader Impact
+    path: sections/section-040/module-01/course-01-from-application-authority-to-broader-impact.md
+  - type: reading
+    title: Summary
+    path: sections/section-040/module-01/course-02-summary.md
 - id: module-050
   title: Attacker on the Network
-  description: Planned coverage of this curriculum objective.
+  description: Concept lessons and scenario reasoning for Attacker on the Network.
+  draft: true
   content:
   - type: reading
-    title: Section Overview
+    title: 'Attacker on the Network: Introduction'
     path: sections/section-050/README.md
   - type: reading
-    title: Attacker on the Network
+    title: Network Attackers And Peer Trust
     path: sections/section-050/module-01/course.md
+  - type: reading
+    title: Protecting Communication From The Correct Boundary
+    path: sections/section-050/module-01/course-01-protecting-communication-from-the-correct-boundary.md
+  - type: reading
+    title: Network Reachability And Request Evidence
+    path: sections/section-050/module-01/course-02-network-reachability-and-request-evidence.md
+  - type: reading
+    title: Summary
+    path: sections/section-050/module-01/course-03-summary.md
 - id: module-060
   title: Access to Sensitive Data
-  description: Planned coverage of this curriculum objective.
+  description: Concept lessons and scenario reasoning for Access to Sensitive Data.
+  draft: true
   content:
   - type: reading
-    title: Section Overview
+    title: 'Access to Sensitive Data: Introduction'
     path: sections/section-060/README.md
   - type: reading
-    title: Access to Sensitive Data
+    title: Sensitive Data Access Paths
     path: sections/section-060/module-01/course.md
+  - type: reading
+    title: Finding Every Reader And Copy
+    path: sections/section-060/module-01/course-01-finding-every-reader-and-copy.md
+  - type: reading
+    title: Summary
+    path: sections/section-060/module-01/course-02-summary.md
 - id: module-070
   title: Privilege Escalation
-  description: Planned coverage of this curriculum objective.
+  description: Concept lessons and scenario reasoning for Privilege Escalation.
+  draft: true
   content:
   - type: reading
-    title: Section Overview
+    title: 'Privilege Escalation: Introduction'
     path: sections/section-070/README.md
   - type: reading
-    title: Privilege Escalation
+    title: Privilege Escalation And Indirect Authority
     path: sections/section-070/module-01/course.md
+  - type: reading
+    title: Reviewing The Authority A Permission Enables
+    path: sections/section-070/module-01/course-01-reviewing-the-authority-a-permission-enables.md
+  - type: reading
+    title: Summary
+    path: sections/section-070/module-01/course-02-summary.md

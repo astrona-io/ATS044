@@ -1,0 +1,112 @@
+schema_version: 1
+kind: question_bank
+id: ats044-section-050
+course_id: ATS044
+exam_code: KCSA
+status: draft
+provenance: Original practice material; not official examination questions.
+scope:
+  type: section
+  id: section-050
+  title: 'Checkpoint: Attacker on the Network'
+placement:
+  position: after
+  reading: sections/section-050/module-01/course-03-summary.md
+questions:
+- id: ats044-section-050-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Compare requests, limits, quotas and rate controls.
+  source_readings:
+  - sections/section-030/module-01/course-01-bounding-work-without-assuming-perfect-availability.md
+  prompt: A namespace stays within quota but a shared database is overwhelmed by expensive queries. Which
+    distinction matters?
+  options:
+  - id: a
+    text: Admission budgets do not bound every external operation's cost.
+    explanation: The data service needs controls suited to its own demand.
+  - id: b
+    text: Quota creates unlimited database capacity.
+    explanation: It does not provision or protect every dependency.
+  - id: c
+    text: More immediate retries always restore service.
+    explanation: Retries can amplify overload.
+  correct_option: a
+  explanation: The data service needs controls suited to its own demand.
+- id: ats044-section-050-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain overload amplification through retries and dependencies.
+  source_readings:
+  - sections/section-030/module-01/course-01-bounding-work-without-assuming-perfect-availability.md
+  prompt: Every client retries repeatedly when a dependency slows. What risk can this create?
+  options:
+  - id: a
+    text: Automatic data deduplication for all writes.
+    explanation: Retry volume does not implement idempotency.
+  - id: b
+    text: A guaranteed new worker node for every request.
+    explanation: Infrastructure provisioning is a separate mechanism.
+  - id: c
+    text: Overload amplification.
+    explanation: Repeated attempts increase demand on the already struggling component.
+  correct_option: c
+  explanation: Repeated attempts increase demand on the already struggling component.
+- id: ats044-section-050-q03
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish application compromise from container escape.
+  source_readings:
+  - sections/section-040/module-01/course-01-from-application-authority-to-broader-impact.md
+  prompt: A compromised process reads reports using its legitimate database role without a container escape.
+    What does this show?
+  options:
+  - id: a
+    text: Every container must therefore be privileged.
+    explanation: More privilege increases risk rather than addressing the cause.
+  - id: b
+    text: Serious application impact can occur within existing authority.
+    explanation: Escape is not required for every data disclosure.
+  - id: c
+    text: No harm can occur unless the kernel is exploited.
+    explanation: Legitimate data access can be misused.
+  correct_option: b
+  explanation: Escape is not required for every data disclosure.
+- id: ats044-section-050-q04
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Trace available credentials, mounts and network paths after compromise.
+  source_readings:
+  - sections/section-040/module-01/course-01-from-application-authority-to-broader-impact.md
+  prompt: A process has no Kubernetes token but mounts a powerful runtime socket. What remains relevant?
+  options:
+  - id: a
+    text: The exposed host execution-control interface.
+    explanation: Missing one credential does not neutralize another authority path.
+  - id: b
+    text: Assume all broader access is impossible.
+    explanation: The socket can supply consequential management operations.
+  - id: c
+    text: Only whether the report identifier is uppercase.
+    explanation: Input spelling does not constrain runtime management.
+  correct_option: a
+  explanation: Missing one credential does not neutralize another authority path.
+- id: ats044-section-050-q05
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain certificate verification and encrypted-hop boundaries.
+  source_readings:
+  - sections/section-050/module-01/course-01-protecting-communication-from-the-correct-boundary.md
+  prompt: Traffic is encrypted to a proxy and plaintext afterward. Where does the protected hop end?
+  options:
+  - id: a
+    text: At every database automatically.
+    explanation: One protected connection does not cover all later paths.
+  - id: b
+    text: Nowhere because private addresses always imply encryption.
+    explanation: Private reachability is not a cryptographic property.
+  - id: c
+    text: At the TLS termination unless another protected connection is established.
+    explanation: Encryption must be evaluated hop by hop.
+  correct_option: c
+  explanation: Encryption must be evaluated hop by hop.
