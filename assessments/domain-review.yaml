@@ -1,0 +1,113 @@
+schema_version: 1
+kind: question_bank
+id: ats044-domain-review
+course_id: ATS044
+exam_code: KCSA
+status: draft
+provenance: Original practice material; not official examination questions.
+scope:
+  type: domain
+  id: domain-review
+  title: Kubernetes Threat Model
+placement:
+  position: after
+  reading: sections/section-070/module-01/course-02-summary.md
+questions:
+- id: ats044-domain-review-q01
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish trusted control components from untrusted workload inputs.
+  source_readings:
+  - sections/section-010/module-01/course-01-tracing-authority-across-the-platform.md
+  prompt: A tenant shares workers and management identities with another tenant. Which assumptions should
+    be explicit?
+  options:
+  - id: a
+    text: Shared host and administrative trust across the supposed tenant boundary.
+    explanation: Namespaced organization alone does not remove those dependencies.
+  - id: b
+    text: That different namespaces create separate physical machines.
+    explanation: They do not.
+  - id: c
+    text: That every client is the same business user.
+    explanation: Identity and trust remain specific to actors.
+  correct_option: a
+  explanation: Namespaced organization alone does not remove those dependencies.
+- id: ats044-domain-review-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe recovery that restores inputs and revokes authority.
+  source_readings:
+  - sections/section-020/module-01/course-01-what-can-survive-a-container-replacement.md
+  prompt: A runtime control path was compromised, then only the application Pod was replaced. What may
+    remain untrusted?
+  options:
+  - id: a
+    text: Nothing because a new UID resets every system.
+    explanation: Object identity does not restore all dependencies.
+  - id: b
+    text: Only the lesson title.
+    explanation: Documentation naming is not the operational boundary.
+  - id: c
+    text: The host, persistent inputs and accessible credentials.
+    explanation: The initial process is not the entire compromise scope.
+  correct_option: c
+  explanation: The initial process is not the entire compromise scope.
+- id: ats044-domain-review-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Relate recovery capacity and evidence to service availability.
+  source_readings:
+  - sections/section-030/module-01/course-01-bounding-work-without-assuming-perfect-availability.md
+  prompt: An HPA adds handlers to a saturated fixed-capacity database. What should be checked?
+  options:
+  - id: a
+    text: Disable all evidence collection to save time.
+    explanation: That reduces diagnosis without resolving the bottleneck.
+  - id: b
+    text: Whether extra handlers worsen the actual dependency bottleneck.
+    explanation: More replicas help only when added capacity addresses the limiting component.
+  - id: c
+    text: Assume scaling always improves every dependency.
+    explanation: External services have their own capacity.
+  correct_option: b
+  explanation: More replicas help only when added capacity addresses the limiting component.
+- id: ats044-domain-review-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Trace diagnostic and indirect permission exposure.
+  source_readings:
+  - sections/section-060/module-01/course-01-finding-every-reader-and-copy.md
+  prompt: A read-only database role is compromised. What risk remains?
+  options:
+  - id: a
+    text: Disclosure within its permitted readable data.
+    explanation: Read-only limits writes but still permits reading.
+  - id: b
+    text: No confidentiality risk is possible.
+    explanation: Reading can expose confidential content.
+  - id: c
+    text: Automatic permission to modify every cluster role.
+    explanation: The database role and Kubernetes grants are distinct.
+  correct_option: a
+  explanation: Read-only limits writes but still permits reading.
+- id: ats044-domain-review-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain why effective permission review includes alternate paths.
+  source_readings:
+  - sections/section-070/module-01/course-01-reviewing-the-authority-a-permission-enables.md
+  prompt: A powerful original token is revoked, but another credential was established under its authority.
+    What must recovery assess?
+  options:
+  - id: a
+    text: Only whether the deleted Pod is absent.
+    explanation: Other lifecycles can survive that deletion.
+  - id: b
+    text: Assume RBAC has a universal automatic rollback.
+    explanation: Permission changes are not automatically reversed as a group.
+  - id: c
+    text: Durable grants and credentials created during the exposure.
+    explanation: Revoking one token does not necessarily remove all resulting authority.
+  correct_option: c
+  explanation: Revoking one token does not necessarily remove all resulting authority.
