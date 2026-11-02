@@ -1,0 +1,153 @@
+version: 1
+approval: KCSA-LESSON-PLAN.md approved; reading-only correction 2026-10-11
+course:
+  id: ATS044
+  certification:
+    name: Kubernetes and Cloud Native Security Associate
+    code: KCSA
+    provider: CNCF / Linux Foundation
+    domain: Kubernetes Threat Model
+    weight: 16
+    competencies:
+    - Kubernetes Trust Boundaries and Data Flow
+    - Persistence
+    - Denial of Service
+    - Malicious Code Execution and Compromised Applications in Containers
+    - Attacker on the Network
+    - Access to Sensitive Data
+    - Privilege Escalation
+defaults:
+  playground: false
+  module_lab: false
+  capstone: false
+  section_quiz: false
+  final_quiz: true
+sections:
+- id: section-010
+  title: Kubernetes Trust Boundaries and Data Flow
+  curriculum_item: Kubernetes Trust Boundaries and Data Flow
+  modules:
+  - id: module-01
+    title: Trust Boundaries And Security Data Flow
+    objectives:
+    - Identify assets, actors and entry points in a Kubernetes design.
+    - Trace a request across network, identity and execution boundaries.
+    - Distinguish trusted control components from untrusted workload inputs.
+    - Relate each boundary to preventive and detective controls.
+    outline:
+    - Tracing Authority Across The Platform
+    playground: false
+    module_lab: false
+    diagrams: []
+  capstone: false
+  section_quiz: false
+- id: section-020
+  title: Persistence
+  curriculum_item: Persistence
+  modules:
+  - id: module-01
+    title: Persistence After Workload Compromise
+    objectives:
+    - Distinguish attacker persistence from ordinary application storage persistence.
+    - Identify durable configuration, identity and data changes that survive Pod deletion.
+    - Relate reconciliation to trusted and compromised desired state.
+    - Describe recovery that restores inputs and revokes authority.
+    outline:
+    - What Can Survive A Container Replacement
+    playground: false
+    module_lab: false
+    diagrams: []
+  capstone: false
+  section_quiz: true
+- id: section-030
+  title: Denial of Service
+  curriculum_item: Denial of Service
+  modules:
+  - id: module-01
+    title: Denial Of Service And Shared Capacity
+    objectives:
+    - Identify API, node and application availability assets.
+    - Compare requests, limits, quotas and rate controls.
+    - Explain overload amplification through retries and dependencies.
+    - Relate recovery capacity and evidence to service availability.
+    outline:
+    - Bounding Work Without Assuming Perfect Availability
+    playground: false
+    module_lab: false
+    diagrams: []
+  capstone: false
+  section_quiz: false
+- id: section-040
+  title: Malicious Code Execution and Compromised Applications in Containers
+  curriculum_item: Malicious Code Execution and Compromised Applications in Containers
+  modules:
+  - id: module-01
+    title: Compromised Application Consequences
+    objectives:
+    - Distinguish application compromise from container escape.
+    - Trace available credentials, mounts and network paths after compromise.
+    - Relate code defenses and containment to different outcomes.
+    - Describe evidence and trusted recovery for an affected workload.
+    outline:
+    - From Application Authority To Broader Impact
+    playground: false
+    module_lab: false
+    diagrams: []
+  capstone: false
+  section_quiz: false
+- id: section-050
+  title: Attacker on the Network
+  curriculum_item: Attacker on the Network
+  modules:
+  - id: module-01
+    title: Network Attackers And Peer Trust
+    objectives:
+    - Identify disclosure, tampering and impersonation threats along a request path.
+    - Distinguish reachability restriction from transport identity protection.
+    - Explain certificate verification and encrypted-hop boundaries.
+    - Relate network evidence to application authorization.
+    outline:
+    - Protecting Communication From The Correct Boundary
+    - Network Reachability And Request Evidence
+    playground: false
+    module_lab: false
+    diagrams: []
+  capstone: false
+  section_quiz: true
+- id: section-060
+  title: Access to Sensitive Data
+  curriculum_item: Access to Sensitive Data
+  modules:
+  - id: module-01
+    title: Sensitive Data Access Paths
+    objectives:
+    - Identify sensitive data in live resources, mounted files and retained copies.
+    - Distinguish encoding, encryption and authorized plaintext access.
+    - Trace diagnostic and indirect permission exposure.
+    - Describe revocation and recovery after credential disclosure.
+    outline:
+    - Finding Every Reader And Copy
+    playground: false
+    module_lab: false
+    diagrams: []
+  capstone: false
+  section_quiz: false
+- id: section-070
+  title: Privilege Escalation
+  curriculum_item: Privilege Escalation
+  modules:
+  - id: module-01
+    title: Privilege Escalation And Indirect Authority
+    objectives:
+    - Distinguish direct grants from routes to broader authority.
+    - Identify risky workload creation, identity and host interfaces.
+    - Relate RBAC, admission and runtime restrictions to escalation prevention.
+    - Explain why effective permission review includes alternate paths.
+    outline:
+    - Reviewing The Authority A Permission Enables
+    playground: false
+    module_lab: false
+    diagrams: []
+  capstone: false
+  section_quiz: true
+assessment_format: YAML question banks, schema version 1; indexed in assessments/index.yaml

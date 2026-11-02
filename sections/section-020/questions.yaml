@@ -1,0 +1,114 @@
+schema_version: 1
+kind: question_bank
+id: ats044-section-020
+course_id: ATS044
+exam_code: KCSA
+status: draft
+provenance: Original practice material; not official examination questions.
+scope:
+  type: section
+  id: section-020
+  title: 'Checkpoint: Persistence'
+placement:
+  position: after
+  reading: sections/section-020/module-01/course-02-summary.md
+questions:
+- id: ats044-section-020-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Identify assets, actors and entry points in a Kubernetes design.
+  source_readings:
+  - sections/section-010/module-01/course-01-tracing-authority-across-the-platform.md
+  prompt: A model lists tool names but no data, identities or entry points. What essential information
+    is missing?
+  options:
+  - id: a
+    text: Assets, actors and actual flows through the architecture.
+    explanation: A useful threat model describes what can be harmed and how authority reaches it.
+  - id: b
+    text: Only the preferred project logo.
+    explanation: Branding does not describe a failure path.
+  - id: c
+    text: A guarantee that every hosted tool is safe.
+    explanation: Tool hosting is not a substitute for model detail.
+  correct_option: a
+  explanation: A useful threat model describes what can be harmed and how authority reaches it.
+- id: ats044-section-020-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Trace a request across network, identity and execution boundaries.
+  source_readings:
+  - sections/section-010/module-01/course-01-tracing-authority-across-the-platform.md
+  prompt: An application reaches a database using its service credential. What boundary should the model
+    describe?
+  options:
+  - id: a
+    text: Only the Pod object's name.
+    explanation: Naming does not define data authority.
+  - id: b
+    text: A rule that all internal callers are equally trusted.
+    explanation: Trust should be scoped to the operation and identity.
+  - id: c
+    text: The application's permitted data operations and the database identity contract.
+    explanation: The user request and service authority are not automatically identical.
+  correct_option: c
+  explanation: The user request and service authority are not automatically identical.
+- id: ats044-section-020-q03
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Relate each boundary to preventive and detective controls.
+  source_readings:
+  - sections/section-010/module-01/course-01-tracing-authority-across-the-platform.md
+  prompt: A stolen deployer token can create unwanted workloads. Which combination addresses different
+    stages?
+  options:
+  - id: a
+    text: Only a dashboard showing total replicas.
+    explanation: A count alone does not prevent or explain the misuse.
+  - id: b
+    text: Narrow grants, suitable admission, runtime restriction and audit evidence.
+    explanation: The controls constrain and observe distinct steps of the route.
+  - id: c
+    text: Only renaming the token file.
+    explanation: Naming does not change valid authority.
+  correct_option: b
+  explanation: The controls constrain and observe distinct steps of the route.
+- id: ats044-section-020-q04
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Identify durable configuration, identity and data changes that survive Pod deletion.
+  source_readings:
+  - sections/section-020/module-01/course-01-what-can-survive-a-container-replacement.md
+  prompt: A suspicious Pod is deleted, but its controller template still selects the harmful image. What
+    can happen?
+  options:
+  - id: a
+    text: Reconciliation creates another unwanted instance.
+    explanation: The durable desired state survived removal of one process.
+  - id: b
+    text: The image is automatically removed from every registry.
+    explanation: Pod deletion does not erase published artifacts.
+  - id: c
+    text: The template becomes trustworthy because a new UID appears.
+    explanation: New object identity does not restore source trust.
+  correct_option: a
+  explanation: The durable desired state survived removal of one process.
+- id: ats044-section-020-q05
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Relate reconciliation to trusted and compromised desired state.
+  source_readings:
+  - sections/section-020/module-01/course-01-what-can-survive-a-container-replacement.md
+  prompt: A healthy GitOps controller reapplies unwanted repository configuration. What needs restoration?
+  options:
+  - id: a
+    text: Only the controller's display name.
+    explanation: Naming does not repair the configuration source.
+  - id: b
+    text: All source history can be assumed irrelevant.
+    explanation: Repository changes can be part of the persistence path.
+  - id: c
+    text: Trusted desired state and the authority to change its source.
+    explanation: Correct reconciliation can implement compromised intent.
+  correct_option: c
+  explanation: Correct reconciliation can implement compromised intent.

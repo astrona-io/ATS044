@@ -1,0 +1,113 @@
+schema_version: 1
+kind: question_bank
+id: ats044-section-070
+course_id: ATS044
+exam_code: KCSA
+status: draft
+provenance: Original practice material; not official examination questions.
+scope:
+  type: section
+  id: section-070
+  title: 'Checkpoint: Privilege Escalation'
+placement:
+  position: after
+  reading: sections/section-070/module-01/course-02-summary.md
+questions:
+- id: ats044-section-070-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Identify sensitive data in live resources, mounted files and retained copies.
+  source_readings:
+  - sections/section-060/module-01/course-01-finding-every-reader-and-copy.md
+  prompt: A Secret is protected, but an old backup exposes its previous credential. What does the model
+    need to include?
+  options:
+  - id: a
+    text: Retained copies and their independent readers.
+    explanation: Current resource controls do not cover every historical copy.
+  - id: b
+    text: Only the current Secret name.
+    explanation: The data path exists outside that object.
+  - id: c
+    text: A guarantee that backups never contain sensitive records.
+    explanation: They can retain confidential values.
+  correct_option: a
+  explanation: Current resource controls do not cover every historical copy.
+- id: ats044-section-070-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish encoding, encryption and authorized plaintext access.
+  source_readings:
+  - sections/section-060/module-01/course-01-finding-every-reader-and-copy.md
+  prompt: A backend decrypts data for an authorized process. What remains a confidentiality concern?
+  options:
+  - id: a
+    text: That decrypting data always disables the kernel.
+    explanation: These are unrelated mechanisms.
+  - id: b
+    text: That a volume access mode identifies every human user.
+    explanation: Attachment modes do not define business identity.
+  - id: c
+    text: Whether the process and its users should receive that plaintext.
+    explanation: Encryption does not replace reader authorization.
+  correct_option: c
+  explanation: Encryption does not replace reader authorization.
+- id: ats044-section-070-q03
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Describe revocation and recovery after credential disclosure.
+  source_readings:
+  - sections/section-060/module-01/course-01-finding-every-reader-and-copy.md
+  prompt: A disclosed password is replaced in the Secret but remains valid at its issuer. What is incomplete?
+  options:
+  - id: a
+    text: Every application backup is automatically erased.
+    explanation: Secret updates do not control all retained data.
+  - id: b
+    text: Revocation of the old authority and coordinated consumer adoption.
+    explanation: A source change is not the whole credential lifecycle.
+  - id: c
+    text: Only changing the file's display title.
+    explanation: Titles do not invalidate credentials.
+  correct_option: b
+  explanation: A source change is not the whole credential lifecycle.
+- id: ats044-section-070-q04
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish direct grants from routes to broader authority.
+  source_readings:
+  - sections/section-070/module-01/course-01-reviewing-the-authority-a-permission-enables.md
+  prompt: A role can create workloads with a powerful ServiceAccount under permissive policy. Why review
+    the indirect consequence?
+  options:
+  - id: a
+    text: The permitted action can reach authority beyond its apparent verb.
+    explanation: Effective permissions include what created resources can access.
+  - id: b
+    text: Because every creation permission always means unrestricted administration.
+    explanation: The route depends on actual identity and policy constraints.
+  - id: c
+    text: Because RBAC never has namespace scope.
+    explanation: Namespaced grants do exist and still need consequence analysis.
+  correct_option: a
+  explanation: Effective permissions include what created resources can access.
+- id: ats044-section-070-q05
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Relate RBAC, admission and runtime restrictions to escalation prevention.
+  source_readings:
+  - sections/section-070/module-01/course-01-reviewing-the-authority-a-permission-enables.md
+  prompt: An identity can disable the admission rule that constrains its deployments. What boundary is
+    weak?
+  options:
+  - id: a
+    text: Only the application's container port.
+    explanation: That does not protect admission configuration.
+  - id: b
+    text: All certificate validity periods.
+    explanation: They are separate from the stated policy modification grant.
+  - id: c
+    text: Authority over the security control itself.
+    explanation: A control's configuration must be protected from inappropriate modification.
+  correct_option: c
+  explanation: A control's configuration must be protected from inappropriate modification.
