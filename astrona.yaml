@@ -38,7 +38,7 @@ modules:
 - id: module-010
   title: Kubernetes Trust Boundaries and Data Flow
   description: Concept lessons and scenario reasoning for Kubernetes Trust Boundaries and Data Flow.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: 'Kubernetes Trust Boundaries and Data Flow: Introduction'
@@ -55,7 +55,7 @@ modules:
 - id: module-020
   title: Persistence
   description: Concept lessons and scenario reasoning for Persistence.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: 'Persistence: Introduction'
@@ -72,7 +72,7 @@ modules:
 - id: module-030
   title: Denial of Service
   description: Concept lessons and scenario reasoning for Denial of Service.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: 'Denial of Service: Introduction'
@@ -90,7 +90,7 @@ modules:
   title: Malicious Code Execution and Compromised Applications in Containers
   description: Concept lessons and scenario reasoning for Malicious Code Execution and Compromised Applications
     in Containers.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: 'Malicious Code Execution and Compromised Applications in Containers: Introduction'
@@ -107,7 +107,7 @@ modules:
 - id: module-050
   title: Attacker on the Network
   description: Concept lessons and scenario reasoning for Attacker on the Network.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: 'Attacker on the Network: Introduction'
@@ -127,7 +127,7 @@ modules:
 - id: module-060
   title: Access to Sensitive Data
   description: Concept lessons and scenario reasoning for Access to Sensitive Data.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: 'Access to Sensitive Data: Introduction'
@@ -144,7 +144,7 @@ modules:
 - id: module-070
   title: Privilege Escalation
   description: Concept lessons and scenario reasoning for Privilege Escalation.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: 'Privilege Escalation: Introduction'
