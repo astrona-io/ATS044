@@ -1,0 +1,156 @@
+# Knowledge check for section 030. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats044-030
+course_id: ATS044
+exam_code: KCSA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-030
+  title: Denial of Service
+questions:
+- id: ats044-030-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Compare requests, limits, quotas and limit ranges
+  source_readings:
+  - sections/section-030/module-01/course-01-bounding-work-without-assuming-perfect-availability.md
+  prompt: A container sets a memory request of 64Mi and a memory limit of 128Mi. Which
+    component uses the request?
+  options:
+  - id: a
+    text: The kernel, to stop the process above 64Mi
+    explanation: The kernel enforces the limit.
+  - id: b
+    text: The scheduler, to choose a node with enough unreserved memory
+    explanation: Correct. The request drives placement.
+  - id: c
+    text: The admission plugin, to reject the pod
+    explanation: The request is not a rejection rule.
+  - id: d
+    text: The API server, to cap the namespace
+    explanation: Caps on a namespace come from a ResourceQuota.
+  correct_option: b
+  explanation: Requests drive scheduling and limits drive enforcement.
+- id: ats044-030-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Predict QoS class and eviction order
+  source_readings:
+  - sections/section-030/module-01/course-01-bounding-work-without-assuming-perfect-availability.md
+  prompt: Pod X has no requests and no limits. Pod Y has equal requests and limits
+    for every container. Under node memory pressure, which statement is correct?
+  options:
+  - id: a
+    text: X is evicted before Y
+    explanation: Correct. X is BestEffort and Y is Guaranteed.
+  - id: b
+    text: Y is evicted before X
+    explanation: Guaranteed pods are evicted last.
+  - id: c
+    text: They are evicted at random
+    explanation: The QoS class sets the order.
+  - id: d
+    text: Neither is ever evicted
+    explanation: The kubelet evicts under pressure.
+  correct_option: a
+  explanation: BestEffort goes first and Guaranteed goes last.
+- id: ats044-030-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain admission order of LimitRange and ResourceQuota
+  source_readings:
+  - sections/section-030/module-01/course-02-quotas-and-limit-ranges.md
+  prompt: A namespace has a ResourceQuota on `limits.memory` and no LimitRange. A
+    pod that sets no limits is created. What happens?
+  options:
+  - id: a
+    text: The pod runs without limits
+    explanation: The quota check would not pass.
+  - id: b
+    text: The pod gets a default limit from the quota
+    explanation: Only a LimitRange adds defaults.
+  - id: c
+    text: The pod is created and evicted later
+    explanation: The check happens at admission.
+  - id: d
+    text: The API server rejects the pod because it does not declare the limit
+    explanation: Correct. A quota on a compute value requires every pod to declare
+      it.
+  correct_option: d
+  explanation: A LimitRange supplies the defaults that a quota needs.
+- id: ats044-030-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Recognise the symptom of a quota hit by a Deployment
+  source_readings:
+  - sections/section-030/module-01/course-02-quotas-and-limit-ranges.md
+  prompt: A Deployment asks for 6 replicas in a namespace whose quota allows 4 pods.
+    What does `kubectl create` show?
+  options:
+  - id: a
+    text: An error that the Deployment exceeds the quota
+    explanation: The Deployment object is not counted against the pod limit.
+  - id: b
+    text: Six running pods
+    explanation: The quota refuses the extra ones.
+  - id: c
+    text: The Deployment is created and the ReplicaSet reports `FailedCreate` for
+      the extra pods
+    explanation: Correct. The quota is checked when the pods are created.
+  - id: d
+    text: The Deployment is deleted
+    explanation: Nothing is deleted.
+  correct_option: c
+  explanation: The symptom appears as missing pods and ReplicaSet events.
+- id: ats044-030-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe how API Priority and Fairness classifies and queues
+    requests
+  source_readings:
+  - sections/section-030/module-02/course-01-api-priority-and-fairness.md
+  prompt: 'Two FlowSchemas both match a request. One has `matchingPrecedence: 800`
+    and the other 5000. Which one applies?'
+  options:
+  - id: a
+    text: The one with 5000
+    explanation: Higher numbers are tried later.
+  - id: b
+    text: The one with 800
+    explanation: Correct. Lower numbers are tried first and the first match wins.
+  - id: c
+    text: Both apply in turn
+    explanation: Only one flow schema classifies a request.
+  - id: d
+    text: The one created last
+    explanation: Creation time does not decide.
+  correct_option: b
+  explanation: Lowest matchingPrecedence wins.
+- id: ats044-030-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain what a PodDisruptionBudget protects and what it does
+    not
+  source_readings:
+  - sections/section-030/module-02/course-02-amplification-and-recovery-capacity.md
+  prompt: 'A Deployment has one replica and a PodDisruptionBudget with `minAvailable:
+    1`. A node drain starts. What happens?'
+  options:
+  - id: a
+    text: The eviction of the pod is refused and the drain waits
+    explanation: Correct. Evicting the only pod would take availability below one.
+  - id: b
+    text: The pod is evicted and recreated at once
+    explanation: The budget blocks the eviction.
+  - id: c
+    text: The budget is ignored for single replicas
+    explanation: The budget applies regardless.
+  - id: d
+    text: The Deployment scales to two replicas
+    explanation: A budget does not change replicas.
+  correct_option: a
+  explanation: A budget needs more replicas than minAvailable to allow any eviction.

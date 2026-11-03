@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Isolate A Suspected Workload (LAB). Graded against the live cluster. Status: UNTESTED (static checks only).
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-044-lab-040-02
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+    nodes:
+      workers: 1
+    addons:
+      cni: calico
+
+# Starting state: the Starfleet workloads plus the faults of this task. The faults stay in place on purpose.
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faulty starting state
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+
+validation:
+  scripts:
+    - name: drifter-isolated
+      description: drifter cannot reach scout and a NetworkPolicy with Egress selects it
+      type: file
+      source: validation/validate-drifter-isolated.sh
+      hint: Create a NetworkPolicy in outpost for app=drifter with policyTypes Egress and no egress rules.
+    - name: shuttle-still-works
+      description: shuttle can still reach scout
+      type: file
+      source: validation/validate-shuttle-still-works.sh
+      hint: Select only the drifter pods. Do not add a policy for starfleet.
+    - name: workloads-available
+      description: The four example Deployments are available
+      type: file
+      source: validation/validate-workloads-available.sh
+      hint: Do not delete the drifter pod or its Deployment.
+
+teardown:
+  keepCluster: false

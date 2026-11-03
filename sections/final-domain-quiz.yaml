@@ -1,0 +1,509 @@
+# Final domain knowledge check across all seven sections.
+schema_version: 1
+kind: question_bank
+id: ats044-final
+course_id: ATS044
+exam_code: KCSA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: domain
+  id: kubernetes-threat-model
+  title: Kubernetes Threat Model
+questions:
+- id: ats044-final-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Identify assets, actors and entry points in a Kubernetes design
+  source_readings:
+  - sections/section-010/module-01/course-01-tracing-authority-across-the-platform.md
+  prompt: A team lists the tools in its cluster but writes down no data, identities
+    or interfaces. What does the threat model still need?
+  options:
+  - id: a
+    text: A list of the container image sizes
+    explanation: Image size does not describe who can reach what.
+  - id: b
+    text: Assets, actors and the entry points through which actors reach them
+    explanation: Correct. A threat model describes what can be harmed and how authority
+      reaches it.
+  - id: c
+    text: A statement that every internal caller is trusted
+    explanation: Trust must be scoped to an action, not assumed for all callers.
+  - id: d
+    text: The names of the nodes only
+    explanation: Node names say nothing about assets or access paths.
+  correct_option: b
+  explanation: A threat model is built from assets, actors and entry points, with
+    a trust assumption for each.
+- id: ats044-final-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Remove unneeded workload credentials
+  source_readings:
+  - sections/section-010/module-01/course-02-entry-points-and-workload-credentials.md
+  prompt: Where does the kubelet place the service account token inside a container?
+  options:
+  - id: a
+    text: In the container image layers
+    explanation: The token is created at pod start and is not part of the image.
+  - id: b
+    text: In the pod name
+    explanation: The pod name is not a credential.
+  - id: c
+    text: In etcd on the node only
+    explanation: etcd is on the control plane, and the container reads a file, not
+      etcd.
+  - id: d
+    text: In a projected volume at `/var/run/secrets/kubernetes.io/serviceaccount`
+    explanation: Correct. The directory also holds `ca.crt` and `namespace`.
+  correct_option: d
+  explanation: The kubelet mounts a projected token volume, and any process in the
+    container can read it.
+- id: ats044-final-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Tell apart a rejection for identity from one for permission
+  source_readings:
+  - sections/section-010/module-02/course-01-the-order-of-decisions-on-an-api-request.md
+  prompt: A request fails with status 403 and the message names the user `system:serviceaccount:starfleet:shuttle`.
+    What does this tell you?
+  options:
+  - id: a
+    text: The credential is unknown
+    explanation: An unknown credential is a 401, or anonymous access.
+  - id: b
+    text: The identity is known and lacks a permission
+    explanation: Correct. A 403 means authentication worked and authorization refused.
+  - id: c
+    text: An admission policy rejected the object content
+    explanation: Admission failures name the policy or webhook.
+  - id: d
+    text: etcd is unavailable
+    explanation: An unavailable store gives a server error, not a 403.
+  correct_option: b
+  explanation: Read the status and the user name in the message to find the stage
+    that refused.
+- id: ats044-final-q04
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish attacker persistence from ordinary application storage
+    persistence
+  source_readings:
+  - sections/section-020/module-01/course-01-what-can-survive-a-container-replacement.md
+  prompt: An incident responder deletes a pod that runs an unwanted image. A new pod
+    with the same image appears a few seconds later. What is the most likely cause?
+  options:
+  - id: a
+    text: The node keeps a copy of the pod and restarts it
+    explanation: The kubelet only runs pods that the API server assigns to it.
+  - id: b
+    text: The owning Deployment still holds the unwanted image in its pod template
+    explanation: Correct. The controller reconciles the actual state to the desired
+      state in the template.
+  - id: c
+    text: The deleted pod was never removed from etcd
+    explanation: Deletion removes the pod object, and the controller creates a new
+      one.
+  - id: d
+    text: kubectl deletes a pod only on one node
+    explanation: kubectl deletes the pod object, wherever it runs.
+  correct_option: b
+  explanation: Persistence is in the desired state, so the fix is the controller,
+    not the pod.
+- id: ats044-final-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Identify durable configuration, identity and data changes that
+    survive Pod deletion
+  source_readings:
+  - sections/section-020/module-01/course-02-finding-and-removing-persistent-objects.md
+  prompt: Which search finds a workload that starts only once a day and has no running
+    pod between runs?
+  options:
+  - id: a
+    text: Listing running pods only
+    explanation: No pod exists between runs.
+  - id: b
+    text: Listing nodes
+    explanation: Nodes do not show workloads that the controllers own.
+  - id: c
+    text: Listing namespaces
+    explanation: Namespaces do not show scheduled jobs.
+  - id: d
+    text: Listing CronJobs in all namespaces
+    explanation: Correct. A CronJob has no pod between runs, so a pod listing does
+      not show it.
+  correct_option: d
+  explanation: Each controller kind needs its own search.
+- id: ats044-final-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain why a long-lived service account token Secret persists
+    after a pod is deleted
+  source_readings:
+  - sections/section-020/module-02/course-01-long-lived-credentials.md
+  prompt: A token read from a Secret of type `kubernetes.io/service-account-token`
+    has no `exp` claim. What follows?
+  options:
+  - id: a
+    text: It expires when the pod restarts
+    explanation: The legacy token is not tied to a pod.
+  - id: b
+    text: It works until the Secret or the service account is deleted
+    explanation: Correct. The API server checks that the Secret still exists.
+  - id: c
+    text: It expires after one hour
+    explanation: Only bound tokens carry an expiry.
+  - id: d
+    text: It works only from inside the cluster
+    explanation: The token is a bearer credential and works from anywhere that can
+      reach the API server.
+  correct_option: b
+  explanation: A token without expiry needs a revocation action.
+- id: ats044-final-q07
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Compare requests, limits, quotas and limit ranges
+  source_readings:
+  - sections/section-030/module-01/course-01-bounding-work-without-assuming-perfect-availability.md
+  prompt: A container sets a memory request of 64Mi and a memory limit of 128Mi. Which
+    component uses the request?
+  options:
+  - id: a
+    text: The kernel, to stop the process above 64Mi
+    explanation: The kernel enforces the limit.
+  - id: b
+    text: The scheduler, to choose a node with enough unreserved memory
+    explanation: Correct. The request drives placement.
+  - id: c
+    text: The admission plugin, to reject the pod
+    explanation: The request is not a rejection rule.
+  - id: d
+    text: The API server, to cap the namespace
+    explanation: Caps on a namespace come from a ResourceQuota.
+  correct_option: b
+  explanation: Requests drive scheduling and limits drive enforcement.
+- id: ats044-final-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain admission order of LimitRange and ResourceQuota
+  source_readings:
+  - sections/section-030/module-01/course-02-quotas-and-limit-ranges.md
+  prompt: A namespace has a ResourceQuota on `limits.memory` and no LimitRange. A
+    pod that sets no limits is created. What happens?
+  options:
+  - id: a
+    text: The pod runs without limits
+    explanation: The quota check would not pass.
+  - id: b
+    text: The pod gets a default limit from the quota
+    explanation: Only a LimitRange adds defaults.
+  - id: c
+    text: The pod is created and evicted later
+    explanation: The check happens at admission.
+  - id: d
+    text: The API server rejects the pod because it does not declare the limit
+    explanation: Correct. A quota on a compute value requires every pod to declare
+      it.
+  correct_option: d
+  explanation: A LimitRange supplies the defaults that a quota needs.
+- id: ats044-final-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe how API Priority and Fairness classifies and queues
+    requests
+  source_readings:
+  - sections/section-030/module-02/course-01-api-priority-and-fairness.md
+  prompt: 'Two FlowSchemas both match a request. One has `matchingPrecedence: 800`
+    and the other 5000. Which one applies?'
+  options:
+  - id: a
+    text: The one with 5000
+    explanation: Higher numbers are tried later.
+  - id: b
+    text: The one with 800
+    explanation: Correct. Lower numbers are tried first and the first match wins.
+  - id: c
+    text: Both apply in turn
+    explanation: Only one flow schema classifies a request.
+  - id: d
+    text: The one created last
+    explanation: Creation time does not decide.
+  correct_option: b
+  explanation: Lowest matchingPrecedence wins.
+- id: ats044-final-q10
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish application compromise from container escape
+  source_readings:
+  - sections/section-040/module-01/course-01-from-application-authority-to-broader-impact.md
+  prompt: An attacker runs code inside a container through a flaw in the application.
+    The container is not privileged and has no host mounts. What does the attacker
+    receive first?
+  options:
+  - id: a
+    text: Root access on the node
+    explanation: That needs an escape.
+  - id: b
+    text: The identity, files, credentials and network paths that the process already
+      has
+    explanation: Correct. This is application compromise without escape.
+  - id: c
+    text: Access to every container on the node
+    explanation: Other containers are separated by the kernel limits.
+  - id: d
+    text: The kubelet credentials
+    explanation: They are on the node, not in the container.
+  correct_option: b
+  explanation: Escape needs a weak isolation setting or a kernel flaw.
+- id: ats044-final-q11
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Trace credentials, mounts and network paths after compromise
+  source_readings:
+  - sections/section-040/module-01/course-02-inventory-of-reachable-authority.md
+  prompt: A pod does not call the Kubernetes API. Which field removes the service
+    account token file from its container?
+  options:
+  - id: a
+    text: 'readOnlyRootFilesystem: true'
+    explanation: It does not affect the projected token volume.
+  - id: b
+    text: 'runAsNonRoot: true'
+    explanation: The user does not remove the file.
+  - id: c
+    text: 'enableServiceLinks: false'
+    explanation: It affects environment variables only.
+  - id: d
+    text: 'automountServiceAccountToken: false'
+    explanation: Correct. The token volume is not mounted.
+  correct_option: d
+  explanation: Remove credentials that the workload never uses.
+- id: ats044-final-q12
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Relate securityContext fields to the effects they remove
+  source_readings:
+  - sections/section-040/module-02/course-01-hardening-the-container-boundary.md
+  prompt: Which field makes a `touch /tmp/x` command fail inside the container?
+  options:
+  - id: a
+    text: 'allowPrivilegeEscalation: false'
+    explanation: It stops privilege gain only.
+  - id: b
+    text: 'readOnlyRootFilesystem: true'
+    explanation: Correct. The root file system is read-only.
+  - id: c
+    text: 'seccompProfile: RuntimeDefault'
+    explanation: It filters system calls but allows file creation.
+  - id: d
+    text: 'runAsNonRoot: true'
+    explanation: A non-root user can still write where it has permission.
+  correct_option: b
+  explanation: Mount a volume where writes are needed.
+- id: ats044-final-q13
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Identify what TLS verification checks
+  source_readings:
+  - sections/section-050/module-01/course-01-protecting-communication-from-the-correct-boundary.md
+  prompt: A client connects to an HTTPS endpoint and the certificate is signed by
+    an unknown authority. What does a verifying client do?
+  options:
+  - id: a
+    text: It continues and logs a warning
+    explanation: That is the behaviour of a client that skips verification.
+  - id: b
+    text: It refuses the connection
+    explanation: Correct. Verification fails when the signer is not trusted.
+  - id: c
+    text: It asks the server for another certificate
+    explanation: The client does not negotiate that.
+  - id: d
+    text: It switches to plain HTTP
+    explanation: A client does not downgrade on its own.
+  correct_option: b
+  explanation: curl exits with code 60 when the certificate check fails.
+- id: ats044-final-q14
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Separate port and targetPort
+  source_readings:
+  - sections/section-050/module-01/course-02-network-reachability-and-request-evidence.md
+  prompt: A Service has port 80 and targetPort 8080, but the container listens on
+    9898. What happens to a request on port 80?
+  options:
+  - id: a
+    text: It reaches port 9898 because the container is the only listener
+    explanation: The Service forwards to the targetPort only.
+  - id: b
+    text: It is answered by the Service itself
+    explanation: A Service does not answer requests.
+  - id: c
+    text: It is dropped by kube-proxy before it leaves the node
+    explanation: It is forwarded, and the pod refuses it.
+  - id: d
+    text: It reaches the pod address on port 8080 and the connection is refused
+    explanation: Correct. The targetPort is the pod-side port.
+  correct_option: d
+  explanation: Set targetPort to the container port or its name.
+- id: ats044-final-q15
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe what a default-deny policy does
+  source_readings:
+  - sections/section-050/module-02/course-01-how-networkpolicy-selects-and-denies.md
+  prompt: 'A NetworkPolicy has `podSelector: {}`, `policyTypes: [Ingress]` and no
+    ingress rules. What is the effect?'
+  options:
+  - id: a
+    text: Every pod accepts all traffic
+    explanation: Only a policy with an allow-all rule does that.
+  - id: b
+    text: Every pod in the namespace accepts no incoming traffic
+    explanation: Correct. Selected pods with no allow rule deny ingress.
+  - id: c
+    text: Only pods with labels are selected
+    explanation: An empty selector selects all pods.
+  - id: d
+    text: Outgoing traffic is blocked
+    explanation: Egress is not listed in policyTypes.
+  correct_option: b
+  explanation: Add allow rules for the paths that are needed.
+- id: ats044-final-q16
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain base64 in a Secret
+  source_readings:
+  - sections/section-060/module-01/course-01-finding-every-reader-and-copy.md
+  prompt: What protection does the base64 form of a Secret value give?
+  options:
+  - id: a
+    text: It encrypts the value with the cluster key
+    explanation: Encryption at rest is a separate feature.
+  - id: b
+    text: None. Anyone who can read the object can decode it
+    explanation: Correct. Base64 is encoding and uses no key.
+  - id: c
+    text: It hides the value from users with get access
+    explanation: A reader with get receives the value and decodes it.
+  - id: d
+    text: It prevents the value from appearing in logs
+    explanation: Base64 does not affect logs.
+  correct_option: b
+  explanation: Base64 only writes bytes as text.
+- id: ats044-final-q17
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Find indirect routes to a Secret value
+  source_readings:
+  - sections/section-060/module-01/course-02-indirect-readers-and-retained-copies.md
+  prompt: An identity has no permission on Secrets but can create pods in the namespace.
+    What can it do?
+  options:
+  - id: a
+    text: Nothing, because pods cannot use Secrets
+    explanation: Pods mount Secrets in the normal way.
+  - id: b
+    text: Read only the Secret names
+    explanation: The pod can read the values.
+  - id: c
+    text: Read Secrets in other namespaces
+    explanation: A pod mounts Secrets of its own namespace only.
+  - id: d
+    text: Start a pod that mounts a Secret and prints its value
+    explanation: Correct. The kubelet delivers the value to the container.
+  correct_option: d
+  explanation: Create on pods is close to read on Secrets.
+- id: ats044-final-q18
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Compare environment variables and files
+  source_readings:
+  - sections/section-060/module-02/course-01-delivering-a-secret-to-one-process.md
+  prompt: Which statement about delivering a Secret as a mounted file is correct?
+  options:
+  - id: a
+    text: The file is visible to every process in the cluster
+    explanation: Only processes that can open it in the container read it.
+  - id: b
+    text: The kubelet updates the file after the Secret changes, unless it is mounted
+      with subPath
+    explanation: Correct. An environment variable never changes in a running container.
+  - id: c
+    text: The file always shows the old value until a node restart
+    explanation: The kubelet syncs the file regularly.
+  - id: d
+    text: The file cannot have a mode
+    explanation: defaultMode sets it.
+  correct_option: b
+  explanation: A file is the better default delivery.
+- id: ats044-final-q19
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Find the real reach of a permission
+  source_readings:
+  - sections/section-070/module-01/course-01-reviewing-the-authority-a-permission-enables.md
+  prompt: Which command shows what a service account may actually do in a namespace?
+  options:
+  - id: a
+    text: kubectl get serviceaccount NAME
+    explanation: It shows the object and not its rights.
+  - id: b
+    text: kubectl auth can-i --list --as=system:serviceaccount:NAMESPACE:NAME -n NAMESPACE
+    explanation: Correct. The API server answers with the effective rights.
+  - id: c
+    text: kubectl describe node
+    explanation: It shows node data.
+  - id: d
+    text: kubectl get events
+    explanation: It shows events and not rights.
+  correct_option: b
+  explanation: Read the answers and not the role names.
+- id: ats044-final-q20
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain the reach of pod creation
+  source_readings:
+  - sections/section-070/module-01/course-02-workload-creation-and-host-interfaces.md
+  prompt: An identity can create Deployments but cannot create pods. What does it
+    follow?
+  options:
+  - id: a
+    text: It cannot run any workload
+    explanation: The controller creates pods on its behalf.
+  - id: b
+    text: It can only run pods in other namespaces
+    explanation: Pods are created in the namespace of the Deployment.
+  - id: c
+    text: It is limited to read-only pods
+    explanation: No such limit exists.
+  - id: d
+    text: It can still choose what pods run, because the controller creates them
+    explanation: Correct. The pod template carries the specification.
+  correct_option: d
+  explanation: Count the identities with create on pods and on controllers.
+- id: ats044-final-q21
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Write a narrow role
+  source_readings:
+  - sections/section-070/module-02/course-01-narrowing-a-role-to-its-task.md
+  prompt: A job only sets the image of Deployments. Which rule fits the task?
+  options:
+  - id: a
+    text: apiGroups *, resources *, verbs *
+    explanation: This grants everything.
+  - id: b
+    text: apiGroups apps, resources deployments, verbs get, list and patch
+    explanation: Correct. It covers the task and nothing else.
+  - id: c
+    text: resources pods, verbs create
+    explanation: It lets the job choose what pods run.
+  - id: d
+    text: resources rolebindings, verbs create
+    explanation: It lets the job hand out authority.
+  correct_option: b
+  explanation: Prove the result with can-i.

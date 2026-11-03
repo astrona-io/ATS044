@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ci-runner
+  namespace: starfleet
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ci-runner-token
+  namespace: starfleet
+  annotations:
+    kubernetes.io/service-account.name: ci-runner
+type: kubernetes.io/service-account-token
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-agent
+  namespace: starfleet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-agent
+  template:
+    metadata:
+      labels:
+        app: node-agent
+    spec:
+      containers:
+        - name: agent
+          image: curlimages/curl:8.22.0
+          command: ["sh", "-c", "while true; do sleep 30; done"]
+          volumeMounts:
+            - name: node-etc
+              mountPath: /host-etc
+              readOnly: true
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+      volumes:
+        - name: node-etc
+          hostPath:
+            path: /etc

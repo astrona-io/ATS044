@@ -39,6 +39,53 @@ Audit records can show sensitive API changes, while runtime evidence can reveal 
 
 A complete privilege review traces reachable authority, applicable controls and residual access. This reasoning is more reliable than equating one omitted verb, one non-root setting or one namespace with complete prevention of escalation.
 
+## Measure What A Role Really Allows
+
+<!-- astrona:playground:renew -->
+The playground gives `shuttle` a Role that is meant to let a release job update Deployments. Read the rules of the Role:
+
+```sh
+kubectl get role release-manager -n starfleet -o yaml
+```
+
+The rules list `deployments`, `roles`, `rolebindings` and `pods/exec`. Ask the API server what each line means for the service account instead of reasoning from the names:
+
+```sh
+kubectl auth can-i patch deployments -n starfleet --as=system:serviceaccount:starfleet:shuttle
+kubectl auth can-i create rolebindings -n starfleet --as=system:serviceaccount:starfleet:shuttle
+kubectl auth can-i create pods/exec -n starfleet --as=system:serviceaccount:starfleet:shuttle
+```
+
+All three answers are `yes`. The first is the purpose of the Role. The other two are not. The right to create role bindings changes who holds authority in the namespace, and the right to run commands in a pod reaches the credentials that the pod holds.
+
+## The Verbs That Move Authority
+
+Most verbs act on an object and change that object only. Five cases act on authority itself.
+
+- `create` or `update` on `roles` and `rolebindings` changes what identities may do. The API server stops a caller from granting permissions that the caller does not hold. This check is called escalation prevention. It keeps the caller inside its own authority, but the caller can still hand its own authority to another identity.
+- `bind` on a Role or ClusterRole lets the caller create a binding to it without holding its permissions.
+- `escalate` on `roles` lets the caller write a role with permissions the caller does not hold.
+- `impersonate` on `users`, `groups` or `serviceaccounts` lets the caller send requests as that identity. The caller then holds all authority of the identity.
+- `create` on `serviceaccounts/token` mints a token for a service account, so the caller can act as it.
+
+Search the cluster for roles that hold any of these verbs:
+
+```sh
+kubectl get roles,clusterroles -A -o json | jq -r '.items[] | select(any(.rules[]?; ((.verbs // []) | map(select(. == "bind" or . == "escalate" or . == "impersonate" or . == "*")) | length) > 0)) | .kind + " " + (.metadata.namespace // "-") + "/" + .metadata.name'
+```
+
+Built-in roles such as `cluster-admin` and `system:controller:*` appear, because they need these verbs. A line that you do not recognise needs an owner and a reason.
+
+## Find The Wide Bindings
+
+A binding to `cluster-admin` gives full authority. List the subjects of the bindings that point at it:
+
+```sh
+kubectl get clusterrolebindings -o json | jq -r '.items[] | select(.roleRef.name=="cluster-admin") | .metadata.name + " -> " + ([.subjects[]? | .kind + "/" + .name] | join(","))'
+```
+
+Every line is an identity that holds all authority. Check each subject. A group such as `system:masters` bypasses authorization entirely, and a binding cannot remove its members.
+
 ## Common pitfalls
 
 > [!WARNING]

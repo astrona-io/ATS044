@@ -11,7 +11,7 @@ scope:
   title: Kubernetes Threat Model
 placement:
   position: after
-  reading: sections/section-070/module-01/course-02-summary.md
+  reading: sections/section-070/module-01/course-03-summary.md
 questions:
 - id: ats044-domain-review-q01
   type: single_choice

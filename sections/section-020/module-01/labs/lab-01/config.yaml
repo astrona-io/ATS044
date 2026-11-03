@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Persistence Through Cluster Objects (LAB). Graded against the live cluster. Status: UNTESTED (static checks only).
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-044-lab-020-01
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+# Starting state: the Starfleet workloads plus the faults of this task. The faults stay in place on purpose.
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faulty starting state
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+
+validation:
+  scripts:
+    - name: rogue-cronjob-removed
+      description: The CronJob cache-warmer is gone together with its Jobs
+      type: file
+      source: validation/validate-rogue-cronjob-removed.sh
+      hint: Delete the CronJob. Its Jobs and pods are removed with it.
+    - name: rogue-daemonset-removed
+      description: The DaemonSet node-helper is gone
+      type: file
+      source: validation/validate-rogue-daemonset-removed.sh
+      hint: Search all controllers with kubectl get daemonsets -A and delete the one that the application does not need.
+    - name: backup-helper-admin-removed
+      description: backup-helper is not bound to cluster-admin
+      type: file
+      source: validation/validate-backup-helper-admin-removed.sh
+      hint: Find the ClusterRoleBinding that names backup-helper and delete it.
+    - name: workloads-available
+      description: The four example Deployments are still available
+      type: file
+      source: validation/validate-workloads-available.sh
+      hint: Delete only the unknown objects.
+
+teardown:
+  keepCluster: false

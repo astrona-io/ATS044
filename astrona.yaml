@@ -1,9 +1,14 @@
-# Reading-only course. YAML assessments are registered separately in assessments/index.yaml.
+# Course manifest for ATS044 - Kubernetes Threat Model (KCSA).
+# Per section: README, then per module the landing page, parts, the lab question and lab, and the summary. The section capstone and quiz close the section.
+# Playgrounds are not listed: the landing page's playground marker shows them. solution.md is never listed.
+# Every `path:` is relative to this file.
 training:
   id: ATS044
   title: 'KCSA: Kubernetes Threat Model'
-  description: Concept lessons, diagrams and original scenario assessments covering every published objective
-    in this KCSA domain. No labs or playgrounds.
+  description: 'Concept lessons with hands-on playgrounds, graded labs, section capstones
+    and knowledge checks covering every published objective in the KCSA Kubernetes
+    Threat Model domain. Targets Kubernetes 1.35. All labs are untested: validated
+    statically only.'
   certification:
     name: Kubernetes and Cloud Native Security Associate
     code: KCSA
@@ -21,7 +26,8 @@ training:
 modules:
 - id: module-intro
   title: Introduction
-  description: Audience, learning approach, reading requirements and contribution process.
+  description: Audience, learning approach, reading requirements and contribution
+    process.
   content:
   - type: reading
     title: Introduction
@@ -37,11 +43,12 @@ modules:
     path: sections/intro/course-03-how-this-course-is-made.md
 - id: module-010
   title: Kubernetes Trust Boundaries and Data Flow
-  description: Concept lessons and scenario reasoning for Kubernetes Trust Boundaries and Data Flow.
-  maturity: alpha
+  description: Readings, playgrounds, graded labs, a capstone and a knowledge check
+    for Kubernetes Trust Boundaries and Data Flow.
+  status: alpha
   content:
   - type: reading
-    title: 'Kubernetes Trust Boundaries and Data Flow: Introduction'
+    title: Kubernetes Trust Boundaries and Data Flow
     path: sections/section-010/README.md
   - type: reading
     title: Trust Boundaries And Security Data Flow
@@ -50,15 +57,107 @@ modules:
     title: Tracing Authority Across The Platform
     path: sections/section-010/module-01/course-01-tracing-authority-across-the-platform.md
   - type: reading
+    title: Entry Points And Workload Credentials
+    path: sections/section-010/module-01/course-02-entry-points-and-workload-credentials.md
+  - type: reading
+    title: Question
+    path: sections/section-010/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Assets, Actors And Entry Points Lab
+    path: sections/section-010/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 15m
+    topic: access-control
+    task_kind: build
+    tags:
+    - serviceaccount
+    - token
+    - automount
+    - trust-boundary
+    - entry-point
+    learning_goals:
+    - Find the workloads that mount a service account token
+    - Disable the token mount on four Deployments that never call the API
+    - Roll the Deployments out without deleting them
+    resources:
+    - name: Kubernetes service accounts
+      url: https://kubernetes.io/docs/concepts/security/service-accounts/
+  - type: reading
     title: Summary
-    path: sections/section-010/module-01/course-02-summary.md
+    path: sections/section-010/module-01/course-03-summary.md
+  - type: reading
+    title: Trust Boundaries And Request Data Flow
+    path: sections/section-010/module-02/course.md
+  - type: reading
+    title: The Order Of Decisions On An API Request
+    path: sections/section-010/module-02/course-01-the-order-of-decisions-on-an-api-request.md
+  - type: reading
+    title: Pod Traffic And The Network Boundary
+    path: sections/section-010/module-02/course-02-pod-traffic-and-the-network-boundary.md
+  - type: reading
+    title: Question
+    path: sections/section-010/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Trust Boundaries And Request Data Flow Lab
+    path: sections/section-010/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: access-control
+    task_kind: build
+    tags:
+    - rbac
+    - role
+    - rolebinding
+    - configmap
+    - resourcenames
+    - least-privilege
+    learning_goals:
+    - Read the rights that a Role gives a service account
+    - Limit shuttle to get on one named ConfigMap and no Secrets
+    - Keep the binding and the running Deployment
+    resources:
+    - name: Kubernetes RBAC reference
+      url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+  - type: reading
+    title: Summary
+    path: sections/section-010/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-010/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Trust Boundaries And Data Flow Capstone
+    path: sections/section-010/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 30m
+    topic: access-control
+    task_kind: build
+    tags:
+    - rbac
+    - clusterrolebinding
+    - serviceaccount
+    - token
+    - secrets
+    learning_goals:
+    - Remove a cluster-wide read grant from a client service account
+    - Disable the token mount on shuttle
+    - Remove Secret read rights from probe
+    resources:
+    - name: Kubernetes RBAC reference
+      url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+    - name: Kubernetes service accounts
+      url: https://kubernetes.io/docs/concepts/security/service-accounts/
+  - type: quiz
+    title: 'Knowledge Check: Kubernetes Trust Boundaries and Data Flow'
+    path: sections/section-010/quiz.yaml
+    pass_score: 70
 - id: module-020
   title: Persistence
-  description: Concept lessons and scenario reasoning for Persistence.
-  maturity: alpha
+  description: Readings, playgrounds, graded labs, a capstone and a knowledge check
+    for Persistence.
+  status: alpha
   content:
   - type: reading
-    title: 'Persistence: Introduction'
+    title: Persistence
     path: sections/section-020/README.md
   - type: reading
     title: Persistence After Workload Compromise
@@ -67,33 +166,216 @@ modules:
     title: What Can Survive A Container Replacement
     path: sections/section-020/module-01/course-01-what-can-survive-a-container-replacement.md
   - type: reading
+    title: Finding And Removing Persistent Objects
+    path: sections/section-020/module-01/course-02-finding-and-removing-persistent-objects.md
+  - type: reading
+    title: Question
+    path: sections/section-020/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Persistence Through Cluster Objects Lab
+    path: sections/section-020/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: workload-security
+    task_kind: build
+    tags:
+    - cronjob
+    - daemonset
+    - clusterrolebinding
+    - cluster-admin
+    - persistence
+    learning_goals:
+    - Remove a rogue CronJob and the Jobs it started
+    - Remove an unused DaemonSet
+    - Remove a cluster-admin grant from the CronJob service account
+    resources:
+    - name: CronJob
+      url: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
+    - name: Kubernetes RBAC reference
+      url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+  - type: reading
     title: Summary
-    path: sections/section-020/module-01/course-02-summary.md
+    path: sections/section-020/module-01/course-03-summary.md
+  - type: reading
+    title: Persistence Through Credentials And Nodes
+    path: sections/section-020/module-02/course.md
+  - type: reading
+    title: Long-Lived Credentials
+    path: sections/section-020/module-02/course-01-long-lived-credentials.md
+  - type: reading
+    title: Host Access And Recovery
+    path: sections/section-020/module-02/course-02-host-access-and-recovery.md
+  - type: reading
+    title: Question
+    path: sections/section-020/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Persistence Through Credentials And Nodes Lab
+    path: sections/section-020/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: workload-security
+    task_kind: build
+    tags:
+    - hostpath
+    - service-account-token
+    - pod-security
+    - persistence
+    learning_goals:
+    - Remove a long-lived service account token Secret
+    - Remove a Deployment that mounts a node directory
+    - Enforce the baseline Pod Security level on a namespace
+    resources:
+    - name: Pod Security Admission
+      url: https://kubernetes.io/docs/concepts/security/pod-security-admission/
+    - name: Kubernetes service accounts
+      url: https://kubernetes.io/docs/concepts/security/service-accounts/
+  - type: reading
+    title: Summary
+    path: sections/section-020/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-020/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Persistence Capstone
+    path: sections/section-020/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 30m
+    topic: workload-security
+    task_kind: build
+    tags:
+    - persistence
+    - daemonset
+    - token
+    - pod-security
+    learning_goals:
+    - Remove a rogue CronJob and its cluster-admin grant
+    - Remove a long-lived token and a host path Deployment
+    - Enforce the baseline level so the host path cannot return
+    resources:
+    - name: Pod Security Admission
+      url: https://kubernetes.io/docs/concepts/security/pod-security-admission/
+    - name: Kubernetes RBAC reference
+      url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+  - type: quiz
+    title: 'Knowledge Check: Persistence'
+    path: sections/section-020/quiz.yaml
+    pass_score: 70
 - id: module-030
   title: Denial of Service
-  description: Concept lessons and scenario reasoning for Denial of Service.
-  maturity: alpha
+  description: Readings, playgrounds, graded labs, a capstone and a knowledge check
+    for Denial of Service.
+  status: alpha
   content:
   - type: reading
-    title: 'Denial of Service: Introduction'
+    title: Denial of Service
     path: sections/section-030/README.md
   - type: reading
-    title: Denial Of Service And Shared Capacity
+    title: Bounding Resource Consumption
     path: sections/section-030/module-01/course.md
   - type: reading
     title: Bounding Work Without Assuming Perfect Availability
     path: sections/section-030/module-01/course-01-bounding-work-without-assuming-perfect-availability.md
   - type: reading
+    title: Quotas And Limit Ranges
+    path: sections/section-030/module-01/course-02-quotas-and-limit-ranges.md
+  - type: reading
+    title: Question
+    path: sections/section-030/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Quota And Defaults For A Namespace Lab
+    path: sections/section-030/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: workload-security
+    task_kind: build
+    tags:
+    - resourcequota
+    - limitrange
+    - denial-of-service
+    - namespace
+    learning_goals:
+    - Add a quota and a limit range to a namespace
+    - Give containers defaults so that they count against the quota
+    resources:
+    - name: Resource quotas
+      url: https://kubernetes.io/docs/concepts/policy/resource-quotas/
+    - name: Limit ranges
+      url: https://kubernetes.io/docs/concepts/policy/limit-range/
+  - type: reading
     title: Summary
-    path: sections/section-030/module-01/course-02-summary.md
+    path: sections/section-030/module-01/course-03-summary.md
+  - type: reading
+    title: Protecting The API Server And Applications
+    path: sections/section-030/module-02/course.md
+  - type: reading
+    title: Protecting The API Server With Priority And Fairness
+    path: sections/section-030/module-02/course-01-api-priority-and-fairness.md
+  - type: reading
+    title: Amplification And Recovery Capacity
+    path: sections/section-030/module-02/course-02-amplification-and-recovery-capacity.md
+  - type: reading
+    title: Question
+    path: sections/section-030/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Limit A Noisy Client And Protect probe Lab
+    path: sections/section-030/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: workload-security
+    task_kind: build
+    tags:
+    - flowschema
+    - prioritylevelconfiguration
+    - poddisruptionbudget
+    - apf
+    learning_goals:
+    - Limit a noisy client with an API priority and fairness rule
+    - Protect a workload during disruptions with a PodDisruptionBudget
+    resources:
+    - name: API priority and fairness
+      url: https://kubernetes.io/docs/concepts/cluster-administration/flow-control/
+    - name: Pod disruption budgets
+      url: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
+  - type: reading
+    title: Summary
+    path: sections/section-030/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-030/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Denial Of Service Capstone
+    path: sections/section-030/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 35m
+    topic: workload-security
+    task_kind: build
+    tags:
+    - resourcequota
+    - limitrange
+    - apf
+    - poddisruptionbudget
+    learning_goals:
+    - Bound namespace work and API traffic for a batch exporter
+    - Keep the example workloads available
+    resources:
+    - name: Resource quotas
+      url: https://kubernetes.io/docs/concepts/policy/resource-quotas/
+    - name: API priority and fairness
+      url: https://kubernetes.io/docs/concepts/cluster-administration/flow-control/
+    - name: Pod disruption budgets
+      url: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
+  - type: quiz
+    title: 'Knowledge Check: Denial of Service'
+    path: sections/section-030/quiz.yaml
+    pass_score: 70
 - id: module-040
   title: Malicious Code Execution and Compromised Applications in Containers
-  description: Concept lessons and scenario reasoning for Malicious Code Execution and Compromised Applications
-    in Containers.
-  maturity: alpha
+  description: Readings, playgrounds, graded labs, a capstone and a knowledge check
+    for Malicious Code Execution and Compromised Applications in Containers.
+  status: alpha
   content:
   - type: reading
-    title: 'Malicious Code Execution and Compromised Applications in Containers: Introduction'
+    title: Malicious Code Execution and Compromised Applications in Containers
     path: sections/section-040/README.md
   - type: reading
     title: Compromised Application Consequences
@@ -102,15 +384,101 @@ modules:
     title: From Application Authority To Broader Impact
     path: sections/section-040/module-01/course-01-from-application-authority-to-broader-impact.md
   - type: reading
+    title: Inventory Of Reachable Authority
+    path: sections/section-040/module-01/course-02-inventory-of-reachable-authority.md
+  - type: reading
+    title: Question
+    path: sections/section-040/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Harden A Container With securityContext Lab
+    path: sections/section-040/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: workload-security
+    task_kind: build
+    tags:
+    - securitycontext
+    - readonlyrootfilesystem
+    - capabilities
+    - runasnonroot
+    learning_goals:
+    - Harden a container with a securityContext
+    - Prove the change from inside the container
+    resources:
+    - name: Configure a security context
+      url: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  - type: reading
     title: Summary
-    path: sections/section-040/module-01/course-02-summary.md
+    path: sections/section-040/module-01/course-03-summary.md
+  - type: reading
+    title: Containing And Recovering A Compromised Workload
+    path: sections/section-040/module-02/course.md
+  - type: reading
+    title: Hardening The Container Boundary
+    path: sections/section-040/module-02/course-01-hardening-the-container-boundary.md
+  - type: reading
+    title: Isolation, Evidence And Recovery
+    path: sections/section-040/module-02/course-02-isolation-evidence-and-recovery.md
+  - type: reading
+    title: Question
+    path: sections/section-040/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Isolate A Suspected Workload Lab
+    path: sections/section-040/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: workload-security
+    task_kind: build
+    tags:
+    - networkpolicy
+    - egress
+    - isolation
+    - calico
+    learning_goals:
+    - Isolate a suspected workload with a NetworkPolicy
+    - Keep the other workloads reachable
+    resources:
+    - name: Kubernetes network policies
+      url: https://kubernetes.io/docs/concepts/services-networking/network-policies/
+  - type: reading
+    title: Summary
+    path: sections/section-040/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-040/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Compromised Application Capstone
+    path: sections/section-040/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 30m
+    topic: workload-security
+    task_kind: build
+    tags:
+    - securitycontext
+    - networkpolicy
+    - isolation
+    - hardening
+    learning_goals:
+    - Harden a compromised client and isolate its namespace
+    - Keep the application path working
+    resources:
+    - name: Configure a security context
+      url: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+    - name: Kubernetes network policies
+      url: https://kubernetes.io/docs/concepts/services-networking/network-policies/
+  - type: quiz
+    title: 'Knowledge Check: Malicious Code Execution and Compromised Applications
+      in Containers'
+    path: sections/section-040/quiz.yaml
+    pass_score: 70
 - id: module-050
   title: Attacker on the Network
-  description: Concept lessons and scenario reasoning for Attacker on the Network.
-  maturity: alpha
+  description: Readings, playgrounds, graded labs, a capstone and a knowledge check
+    for Attacker on the Network.
+  status: alpha
   content:
   - type: reading
-    title: 'Attacker on the Network: Introduction'
+    title: Attacker on the Network
     path: sections/section-050/README.md
   - type: reading
     title: Network Attackers And Peer Trust
@@ -122,15 +490,100 @@ modules:
     title: Network Reachability And Request Evidence
     path: sections/section-050/module-01/course-02-network-reachability-and-request-evidence.md
   - type: reading
+    title: Request Evidence, Timeouts And Retries
+    path: sections/section-050/module-01/course-03-request-evidence-timeouts-and-retries.md
+  - type: reading
+    title: Question
+    path: sections/section-050/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Repair A Service Path Lab
+    path: sections/section-050/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: workload-security
+    task_kind: troubleshooting
+    tags:
+    - service
+    - endpoints
+    - targetport
+    - selector
+    learning_goals:
+    - Find the stage of the request path that fails
+    - Correct the selector and the target port of a Service
+    resources:
+    - name: Kubernetes Services
+      url: https://kubernetes.io/docs/concepts/services-networking/service/
+  - type: reading
     title: Summary
-    path: sections/section-050/module-01/course-03-summary.md
+    path: sections/section-050/module-01/course-04-summary.md
+  - type: reading
+    title: Restricting Network Paths With NetworkPolicy
+    path: sections/section-050/module-02/course.md
+  - type: reading
+    title: How NetworkPolicy Selects And Denies
+    path: sections/section-050/module-02/course-01-how-networkpolicy-selects-and-denies.md
+  - type: reading
+    title: Allowing Only The Traffic An Application Needs
+    path: sections/section-050/module-02/course-02-allowing-only-the-traffic-an-application-needs.md
+  - type: reading
+    title: Question
+    path: sections/section-050/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Default Deny With An Explicit Allow Lab
+    path: sections/section-050/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: workload-security
+    task_kind: build
+    tags:
+    - networkpolicy
+    - default-deny
+    - ingress
+    - calico
+    learning_goals:
+    - Add a default-deny ingress policy to a namespace
+    - Allow one client to reach one service on one port
+    resources:
+    - name: Kubernetes network policies
+      url: https://kubernetes.io/docs/concepts/services-networking/network-policies/
+  - type: reading
+    title: Summary
+    path: sections/section-050/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-050/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Network Attacker Capstone
+    path: sections/section-050/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 35m
+    topic: workload-security
+    task_kind: build
+    tags:
+    - service
+    - endpoints
+    - networkpolicy
+    - default-deny
+    learning_goals:
+    - Repair a broken Service
+    - Restrict the namespace so that only one client reaches its services
+    resources:
+    - name: Kubernetes Services
+      url: https://kubernetes.io/docs/concepts/services-networking/service/
+    - name: Kubernetes network policies
+      url: https://kubernetes.io/docs/concepts/services-networking/network-policies/
+  - type: quiz
+    title: 'Knowledge Check: Attacker on the Network'
+    path: sections/section-050/quiz.yaml
+    pass_score: 70
 - id: module-060
   title: Access to Sensitive Data
-  description: Concept lessons and scenario reasoning for Access to Sensitive Data.
-  maturity: alpha
+  description: Readings, playgrounds, graded labs, a capstone and a knowledge check
+    for Access to Sensitive Data.
+  status: alpha
   content:
   - type: reading
-    title: 'Access to Sensitive Data: Introduction'
+    title: Access to Sensitive Data
     path: sections/section-060/README.md
   - type: reading
     title: Sensitive Data Access Paths
@@ -139,15 +592,102 @@ modules:
     title: Finding Every Reader And Copy
     path: sections/section-060/module-01/course-01-finding-every-reader-and-copy.md
   - type: reading
+    title: Indirect Readers And Retained Copies
+    path: sections/section-060/module-01/course-02-indirect-readers-and-retained-copies.md
+  - type: reading
+    title: Question
+    path: sections/section-060/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Narrow A Secret Reader Lab
+    path: sections/section-060/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 15m
+    topic: access-control
+    task_kind: build
+    tags:
+    - secrets
+    - role
+    - resourcenames
+    - rbac
+    learning_goals:
+    - Find the identities that can read Secrets
+    - Narrow a Role to get on one named Secret
+    resources:
+    - name: Kubernetes Secrets
+      url: https://kubernetes.io/docs/concepts/configuration/secret/
+    - name: Kubernetes RBAC reference
+      url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+  - type: reading
     title: Summary
-    path: sections/section-060/module-01/course-02-summary.md
+    path: sections/section-060/module-01/course-03-summary.md
+  - type: reading
+    title: Limiting And Recovering From Disclosure
+    path: sections/section-060/module-02/course.md
+  - type: reading
+    title: Delivering A Secret To One Process
+    path: sections/section-060/module-02/course-01-delivering-a-secret-to-one-process.md
+  - type: reading
+    title: Rotating And Revoking A Credential
+    path: sections/section-060/module-02/course-02-rotating-and-revoking-a-credential.md
+  - type: reading
+    title: Question
+    path: sections/section-060/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Deliver A Secret As A File Lab
+    path: sections/section-060/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 20m
+    topic: access-control
+    task_kind: build
+    tags:
+    - secrets
+    - volume
+    - environment
+    - readonly
+    learning_goals:
+    - Move a password from an environment variable to a read-only file
+    - Roll out the change without downtime
+    resources:
+    - name: Kubernetes Secrets
+      url: https://kubernetes.io/docs/concepts/configuration/secret/
+  - type: reading
+    title: Summary
+    path: sections/section-060/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-060/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Sensitive Data Capstone
+    path: sections/section-060/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 30m
+    topic: access-control
+    task_kind: build
+    tags:
+    - secrets
+    - rbac
+    - volume
+    - resourcenames
+    learning_goals:
+    - Narrow a Secret reader and change how a password is delivered
+    - Keep the example workloads available
+    resources:
+    - name: Kubernetes Secrets
+      url: https://kubernetes.io/docs/concepts/configuration/secret/
+    - name: Kubernetes RBAC reference
+      url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+  - type: quiz
+    title: 'Knowledge Check: Access to Sensitive Data'
+    path: sections/section-060/quiz.yaml
+    pass_score: 70
 - id: module-070
   title: Privilege Escalation
-  description: Concept lessons and scenario reasoning for Privilege Escalation.
-  maturity: alpha
+  description: Readings, playgrounds, graded labs, a capstone and a knowledge check
+    for Privilege Escalation.
+  status: alpha
   content:
   - type: reading
-    title: 'Privilege Escalation: Introduction'
+    title: Privilege Escalation
     path: sections/section-070/README.md
   - type: reading
     title: Privilege Escalation And Indirect Authority
@@ -156,5 +696,94 @@ modules:
     title: Reviewing The Authority A Permission Enables
     path: sections/section-070/module-01/course-01-reviewing-the-authority-a-permission-enables.md
   - type: reading
+    title: Workload Creation And Host Interfaces
+    path: sections/section-070/module-01/course-02-workload-creation-and-host-interfaces.md
+  - type: reading
+    title: Question
+    path: sections/section-070/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Remove Surplus Release Rights Lab
+    path: sections/section-070/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 15m
+    topic: access-control
+    task_kind: build
+    tags:
+    - rbac
+    - role
+    - rolebinding
+    - escalation
+    - least-privilege
+    learning_goals:
+    - Find rights that move authority
+    - Reduce a Role to the verbs that a release task needs
+    resources:
+    - name: Kubernetes RBAC reference
+      url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+  - type: reading
     title: Summary
-    path: sections/section-070/module-01/course-02-summary.md
+    path: sections/section-070/module-01/course-03-summary.md
+  - type: reading
+    title: Preventing Escalation With Controls
+    path: sections/section-070/module-02/course.md
+  - type: reading
+    title: Narrowing A Role To Its Task
+    path: sections/section-070/module-02/course-01-narrowing-a-role-to-its-task.md
+  - type: reading
+    title: Admission And Protecting The Controls
+    path: sections/section-070/module-02/course-02-admission-and-protecting-the-controls.md
+  - type: reading
+    title: Question
+    path: sections/section-070/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Enforce Pod Security Admission Lab
+    path: sections/section-070/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 15m
+    topic: admission-control
+    task_kind: build
+    tags:
+    - pod-security-admission
+    - baseline
+    - namespace-label
+    - dry-run
+    learning_goals:
+    - Enforce the baseline level on a namespace
+    - Prove one rejected and one accepted pod with a server-side dry run
+    resources:
+    - name: Pod Security Admission
+      url: https://kubernetes.io/docs/concepts/security/pod-security-admission/
+  - type: reading
+    title: Summary
+    path: sections/section-070/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-070/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Privilege Escalation Capstone
+    path: sections/section-070/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 30m
+    topic: admission-control
+    task_kind: build
+    tags:
+    - rbac
+    - pod-security-admission
+    - escalation
+    - baseline
+    learning_goals:
+    - Remove surplus rights from a release job
+    - Enforce the baseline level on the namespace
+    resources:
+    - name: Kubernetes RBAC reference
+      url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+    - name: Pod Security Admission
+      url: https://kubernetes.io/docs/concepts/security/pod-security-admission/
+  - type: quiz
+    title: 'Knowledge Check: Privilege Escalation'
+    path: sections/section-070/quiz.yaml
+    pass_score: 70
+  - type: quiz
+    title: 'Final Knowledge Check: Kubernetes Threat Model'
+    path: sections/final-domain-quiz.yaml
+    pass_score: 70

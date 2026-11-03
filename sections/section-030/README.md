@@ -7,7 +7,7 @@ exam_objectives:
 
 This section teaches denial of service and shared capacity. These ideas help you explain system behavior and choose a suitable approach in a KCSA scenario.
 
-You will work through Denial Of Service And Shared Capacity. Each module introduces its goals, teaches the concepts through examples, and closes with a summary. Reusable YAML checkpoints review related objectives after selected section summaries. The course assessment index records their placement and coverage.
+You will work through Bounding Resource Consumption and Protecting The API Server And Applications. Each module has a landing page, deep-dive parts with hands-on steps in a playground, a graded lab and a summary. The section ends with a capstone lab that combines the skills of both modules and a knowledge check.
 
 ## Learning Outcomes
 

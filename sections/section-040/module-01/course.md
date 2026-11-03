@@ -5,20 +5,23 @@ exam_objectives:
 ---
 # Compromised Application Consequences
 
-This module develops the reasoning needed to distinguish application compromise from container escape.
+When an attacker runs code inside a container, the code gets the identity, files, credentials and network paths of that container. This module shows how to list exactly what a compromised process can reach, so you can separate the effects of an application compromise from a container escape.
 
 ## Learning Goals
 
 - Distinguish application compromise from container escape.
-- Trace available credentials, mounts and network paths after compromise.
-- Relate code defenses and containment to different outcomes.
-- Describe evidence and trusted recovery for an affected workload.
+- Read the user, capabilities, mounts and credentials of a running container.
+- Test which services a pod can reach on the network.
+- Explain which effects a compromise has without any escape.
 
 ## Before You Start
 
-Read the examples as descriptions of system behavior. No cluster, account, laboratory or installed tool is required. Technical terms are defined where they are used.
+You need Kubernetes basics: namespaces, pods, Deployments and `kubectl get`. The playground is a kind cluster running Kubernetes 1.35 with the example workloads `scout`, `probe` and `shuttle` in `starfleet` and `drifter` in `outpost`, each on its own service account. You run every command as the cluster administrator and test other identities with `--as`. You use `kubectl exec` to run commands inside the example pods. In a real incident the attacker does the same from inside the process.
 
 ## Reading Order
 
-1. From Application Authority To Broader Impact
-2. Summary
+The first part explains the boundaries around a container and reads the process identity and file system from inside the pod. The second part builds an inventory of the credentials and network paths that the process can use.
+
+Start your playground now and keep it running while you read:
+
+<!-- astrona:playground -->

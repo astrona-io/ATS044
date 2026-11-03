@@ -7,7 +7,7 @@ banks:
   question_count: 5
   placement:
     position: after
-    reading: sections/section-020/module-01/course-02-summary.md
+    reading: sections/section-020/module-01/course-03-summary.md
   covered_sections:
   - section-010
   - section-020
@@ -16,7 +16,7 @@ banks:
   question_count: 5
   placement:
     position: after
-    reading: sections/section-050/module-01/course-03-summary.md
+    reading: sections/section-050/module-01/course-04-summary.md
   covered_sections:
   - section-030
   - section-040
@@ -26,7 +26,7 @@ banks:
   question_count: 5
   placement:
     position: after
-    reading: sections/section-070/module-01/course-02-summary.md
+    reading: sections/section-070/module-01/course-03-summary.md
   covered_sections:
   - section-060
   - section-070
@@ -35,7 +35,7 @@ banks:
   question_count: 5
   placement:
     position: after
-    reading: sections/section-070/module-01/course-02-summary.md
+    reading: sections/section-070/module-01/course-03-summary.md
   covered_sections:
   - section-010
   - section-020

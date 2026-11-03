@@ -203,20 +203,33 @@ The course covers **Kubernetes Threat Model**, worth **16%** of
 **Kubernetes and Cloud Native Security Associate (KCSA)**. It is part of **ATP009**.
 The official objectives are listed in `astrona.yaml` and mapped in `CURRICULUM.md`.
 
-### Reading-only scope
+### Scope: readings, playgrounds, labs, capstones and quizzes
 
-The maintainer approved the lesson plan, asked for deeper teaching, and explicitly
-requested **no labs or playgrounds**. That instruction overrides shared examples
-about hands-on environments, graded labs and playground markers. Do not create
-runtime configurations, executable exercises or playground lifecycle markers.
-The course must be usable without a cluster or installed command-line tools.
+The maintainer first asked for readings only, then explicitly approved
+(2026-11-03) hands-on material. Playgrounds, graded labs, section capstones and
+`quiz.yaml` knowledge checks are now in scope and replace the earlier
+reading-only rule. Existing readings and question banks stay.
+
+Each section has two modules. Each module has a playground, a graded lab
+placed right after its last part (with a `question.md` reading before it in
+`astrona.yaml`) and a summary that ends with the playground destroy marker.
+Each section has a capstone lab, a `quiz.yaml` (a `type: quiz` entry with
+`pass_score: 70`) and the course ends with `sections/final-domain-quiz.yaml`.
+Labs use the Starfleet example app on a kind cluster with Kubernetes 1.35.
+NetworkPolicy labs use the Calico network plugin.
+
+Labs and playgrounds are built untested: check them statically with
+`astrona validate -c <dir>`, `bash -n` and a YAML parse, and mark each lab
+README UNTESTED. Do not claim runtime verification until a lab has run.
 
 ### Teaching structure and depth
 
 Every section begins with its own introduction and measurable learning outcomes.
-Every module contains a landing page, developed teaching lessons and a final
-`# Summary` page. Put the summary after all its lessons and before the next
-module. This reading-only summary has no playground destruction marker.
+Every module contains a landing page with the playground marker, developed
+parts of at least 90 lines, and a final `# Summary` page that ends with
+`<!-- astrona:playground:destroy -->`. Put the summary after all its parts and
+before the next module. Write each part with a single
+`<!-- astrona:playground:renew -->` before its first command.
 
 Explain mechanisms, responsible components, realistic examples and the limits
 of each claim. Include worked reasoning and relevant failure cases. Avoid thin
@@ -248,4 +261,4 @@ The ATP registration remains draft until publication is approved.
 Primary author sources are recorded in `SOURCES.md`. The objective list was
 verified on 2026-10-11. Detailed reading expansions were written on 2026-10-11.
 Validate manifest paths, summary ordering, curriculum coverage and question
-contracts. Do not claim runtime verification for a reading-only course.
+contracts. Do not claim runtime verification until a lab has run on a cluster.

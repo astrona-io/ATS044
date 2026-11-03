@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Denial Of Service Capstone (LAB). Graded against the live cluster. Status: UNTESTED (static checks only).
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-044-capstone-030
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+# Starting state: the Starfleet workloads plus the faults of this task. The faults stay in place on purpose.
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faulty starting state
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+
+validation:
+  scripts:
+    - name: outpost-quota
+      description: outpost has a ResourceQuota with a pod limit of 6 or fewer and a memory cap
+      type: file
+      source: validation/validate-outpost-quota.sh
+      hint: Create a ResourceQuota in outpost with hard pods and limits.memory.
+    - name: outpost-limitrange
+      description: outpost has a LimitRange with default memory request and limit
+      type: file
+      source: validation/validate-outpost-limitrange.sh
+      hint: Create a LimitRange of type Container with defaultRequest and default memory.
+    - name: outpost-defaults-applied
+      description: A pod without resources is accepted and receives a memory limit
+      type: file
+      source: validation/validate-outpost-defaults-applied.sh
+      hint: Add the LimitRange so the quota can admit pods that declare nothing.
+    - name: apf-exporter
+      description: report-exporter has its own Limited priority level that rejects when full
+      type: file
+      source: validation/validate-apf-exporter.sh
+      hint: Create level exporter-limited and flow schema exporter-flow for the service account report-exporter.
+    - name: probe-budget
+      description: A PodDisruptionBudget for probe allows one disruption
+      type: file
+      source: validation/validate-probe-budget.sh
+      hint: Use minAvailable 1 on app=probe. probe is already scaled to two replicas.
+    - name: workloads-available
+      description: The four example Deployments are available
+      type: file
+      source: validation/validate-workloads-available.sh
+      hint: Do not scale probe below two replicas.
+
+teardown:
+  keepCluster: false

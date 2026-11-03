@@ -1,0 +1,153 @@
+# Knowledge check for section 040. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats044-040
+course_id: ATS044
+exam_code: KCSA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-040
+  title: Malicious Code Execution and Compromised Applications in Containers
+questions:
+- id: ats044-040-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish application compromise from container escape
+  source_readings:
+  - sections/section-040/module-01/course-01-from-application-authority-to-broader-impact.md
+  prompt: An attacker runs code inside a container through a flaw in the application.
+    The container is not privileged and has no host mounts. What does the attacker
+    receive first?
+  options:
+  - id: a
+    text: Root access on the node
+    explanation: That needs an escape.
+  - id: b
+    text: The identity, files, credentials and network paths that the process already
+      has
+    explanation: Correct. This is application compromise without escape.
+  - id: c
+    text: Access to every container on the node
+    explanation: Other containers are separated by the kernel limits.
+  - id: d
+    text: The kubelet credentials
+    explanation: They are on the node, not in the container.
+  correct_option: b
+  explanation: Escape needs a weak isolation setting or a kernel flaw.
+- id: ats044-040-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Identify escape preconditions in pod settings
+  source_readings:
+  - sections/section-040/module-01/course-01-from-application-authority-to-broader-impact.md
+  prompt: Which pod setting is a typical precondition for a container escape?
+  options:
+  - id: a
+    text: A writable hostPath mount of a sensitive node directory
+    explanation: Correct. It gives write access to node files.
+  - id: b
+    text: A memory limit
+    explanation: A limit restricts the container.
+  - id: c
+    text: A readiness probe
+    explanation: A probe checks health only.
+  - id: d
+    text: An emptyDir volume
+    explanation: It is private storage of the pod.
+  correct_option: a
+  explanation: Privileged mode, runtime sockets and host paths are preconditions.
+- id: ats044-040-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Trace credentials, mounts and network paths after compromise
+  source_readings:
+  - sections/section-040/module-01/course-02-inventory-of-reachable-authority.md
+  prompt: A pod does not call the Kubernetes API. Which field removes the service
+    account token file from its container?
+  options:
+  - id: a
+    text: 'readOnlyRootFilesystem: true'
+    explanation: It does not affect the projected token volume.
+  - id: b
+    text: 'runAsNonRoot: true'
+    explanation: The user does not remove the file.
+  - id: c
+    text: 'enableServiceLinks: false'
+    explanation: It affects environment variables only.
+  - id: d
+    text: 'automountServiceAccountToken: false'
+    explanation: Correct. The token volume is not mounted.
+  correct_option: d
+  explanation: Remove credentials that the workload never uses.
+- id: ats044-040-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain why every pod can reach the API server
+  source_readings:
+  - sections/section-040/module-01/course-02-inventory-of-reachable-authority.md
+  prompt: A compromised pod sends a request to the API server address. What stops
+    it?
+  options:
+  - id: a
+    text: The pod network blocks all API traffic
+    explanation: No such default exists.
+  - id: b
+    text: The kubelet blocks the pod
+    explanation: The kubelet does not filter pod traffic.
+  - id: c
+    text: Authentication and authorization of the request, not the network path
+    explanation: Correct. By default every pod can reach the address.
+  - id: d
+    text: The container runtime rejects it
+    explanation: The runtime does not decide API access.
+  correct_option: c
+  explanation: RBAC limits what the token may do.
+- id: ats044-040-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Relate securityContext fields to the effects they remove
+  source_readings:
+  - sections/section-040/module-02/course-01-hardening-the-container-boundary.md
+  prompt: Which field makes a `touch /tmp/x` command fail inside the container?
+  options:
+  - id: a
+    text: 'allowPrivilegeEscalation: false'
+    explanation: It stops privilege gain only.
+  - id: b
+    text: 'readOnlyRootFilesystem: true'
+    explanation: Correct. The root file system is read-only.
+  - id: c
+    text: 'seccompProfile: RuntimeDefault'
+    explanation: It filters system calls but allows file creation.
+  - id: d
+    text: 'runAsNonRoot: true'
+    explanation: A non-root user can still write where it has permission.
+  correct_option: b
+  explanation: Mount a volume where writes are needed.
+- id: ats044-040-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Order the steps of isolation, evidence and recovery
+  source_readings:
+  - sections/section-040/module-02/course-02-isolation-evidence-and-recovery.md
+  prompt: A pod is suspected to be compromised. Which first action keeps the evidence
+    and limits damage?
+  options:
+  - id: a
+    text: Apply a NetworkPolicy that blocks its traffic and keep the pod running
+    explanation: Correct. The pod stays available for inspection.
+  - id: b
+    text: Delete the pod
+    explanation: The log and writable layer are lost and a Deployment starts the same
+      image.
+  - id: c
+    text: Restart the node
+    explanation: Evidence in memory is lost.
+  - id: d
+    text: Scale the Deployment to zero
+    explanation: The pod is deleted with its evidence.
+  correct_option: a
+  explanation: Isolate, collect, replace, verify.

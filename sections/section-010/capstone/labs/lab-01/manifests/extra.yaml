@@ -1,0 +1,45 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: drifter-view
+subjects:
+  - kind: ServiceAccount
+    name: drifter
+    namespace: outpost
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: probe-db
+  namespace: starfleet
+type: Opaque
+stringData:
+  password: change-me-lab-only
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: probe-secrets
+  namespace: starfleet
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: probe-secrets
+  namespace: starfleet
+subjects:
+  - kind: ServiceAccount
+    name: probe
+    namespace: starfleet
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: probe-secrets

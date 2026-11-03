@@ -1,0 +1,153 @@
+# Knowledge check for section 050. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats044-050
+course_id: ATS044
+exam_code: KCSA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-050
+  title: 'Checkpoint: Attacker on the Network'
+questions:
+- id: ats044-050-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Identify what TLS verification checks
+  source_readings:
+  - sections/section-050/module-01/course-01-protecting-communication-from-the-correct-boundary.md
+  prompt: A client connects to an HTTPS endpoint and the certificate is signed by
+    an unknown authority. What does a verifying client do?
+  options:
+  - id: a
+    text: It continues and logs a warning
+    explanation: That is the behaviour of a client that skips verification.
+  - id: b
+    text: It refuses the connection
+    explanation: Correct. Verification fails when the signer is not trusted.
+  - id: c
+    text: It asks the server for another certificate
+    explanation: The client does not negotiate that.
+  - id: d
+    text: It switches to plain HTTP
+    explanation: A client does not downgrade on its own.
+  correct_option: b
+  explanation: curl exits with code 60 when the certificate check fails.
+- id: ats044-050-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Walk the request path to a Service
+  source_readings:
+  - sections/section-050/module-01/course-02-network-reachability-and-request-evidence.md
+  prompt: A name resolves to a Service address but curl times out and the Service
+    has no endpoints. Which stage is the most likely cause?
+  options:
+  - id: a
+    text: The Service selector matches no ready pod
+    explanation: Correct. With no endpoints, nothing receives the traffic.
+  - id: b
+    text: DNS lookup failed
+    explanation: The name resolved, so DNS worked.
+  - id: c
+    text: The client certificate expired
+    explanation: The request never reached a TLS stage.
+  - id: d
+    text: The node clock is wrong
+    explanation: That does not empty the endpoint list.
+  correct_option: a
+  explanation: Compare the selector with the pod labels.
+- id: ats044-050-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Separate port and targetPort
+  source_readings:
+  - sections/section-050/module-01/course-02-network-reachability-and-request-evidence.md
+  prompt: A Service has port 80 and targetPort 8080, but the container listens on
+    9898. What happens to a request on port 80?
+  options:
+  - id: a
+    text: It reaches port 9898 because the container is the only listener
+    explanation: The Service forwards to the targetPort only.
+  - id: b
+    text: It is answered by the Service itself
+    explanation: A Service does not answer requests.
+  - id: c
+    text: It is dropped by kube-proxy before it leaves the node
+    explanation: It is forwarded, and the pod refuses it.
+  - id: d
+    text: It reaches the pod address on port 8080 and the connection is refused
+    explanation: Correct. The targetPort is the pod-side port.
+  correct_option: d
+  explanation: Set targetPort to the container port or its name.
+- id: ats044-050-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain timeouts and retries
+  source_readings:
+  - sections/section-050/module-01/course-03-request-evidence-timeouts-and-retries.md
+  prompt: A client retries a failed request three times with no delay and no limit
+    on total time. What risk does this add?
+  options:
+  - id: a
+    text: It lowers the chance of success
+    explanation: Retries can help on short faults.
+  - id: b
+    text: It changes the request path
+    explanation: The path stays the same.
+  - id: c
+    text: It multiplies the load on a service that is already failing
+    explanation: Correct. Retries add requests during an overload.
+  - id: d
+    text: It disables the timeout
+    explanation: The timeout still applies to each try.
+  correct_option: c
+  explanation: Use bounded retries with a backoff.
+- id: ats044-050-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe what a default-deny policy does
+  source_readings:
+  - sections/section-050/module-02/course-01-how-networkpolicy-selects-and-denies.md
+  prompt: 'A NetworkPolicy has `podSelector: {}`, `policyTypes: [Ingress]` and no
+    ingress rules. What is the effect?'
+  options:
+  - id: a
+    text: Every pod accepts all traffic
+    explanation: Only a policy with an allow-all rule does that.
+  - id: b
+    text: Every pod in the namespace accepts no incoming traffic
+    explanation: Correct. Selected pods with no allow rule deny ingress.
+  - id: c
+    text: Only pods with labels are selected
+    explanation: An empty selector selects all pods.
+  - id: d
+    text: Outgoing traffic is blocked
+    explanation: Egress is not listed in policyTypes.
+  correct_option: b
+  explanation: Add allow rules for the paths that are needed.
+- id: ats044-050-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Write a narrow allow rule
+  source_readings:
+  - sections/section-050/module-02/course-02-allowing-only-the-traffic-an-application-needs.md
+  prompt: Which rule allows only the pods labelled app=shuttle to reach scout on port
+    9898 after a default deny?
+  options:
+  - id: a
+    text: A policy selecting app=scout with an ingress from podSelector app=shuttle
+      on TCP 9898
+    explanation: Correct. It names the target, the source and the port.
+  - id: b
+    text: A policy selecting all pods with an empty from list
+    explanation: An empty rule allows all sources.
+  - id: c
+    text: A policy selecting app=shuttle with an ingress from app=scout
+    explanation: That allows traffic in the wrong direction.
+  - id: d
+    text: A Service of type NodePort
+    explanation: A Service does not filter traffic.
+  correct_option: a
+  explanation: The policy sits on the receiving pods.

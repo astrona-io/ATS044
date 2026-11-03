@@ -1,0 +1,158 @@
+# Knowledge check for section 010. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats044-010
+course_id: ATS044
+exam_code: KCSA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-010
+  title: Kubernetes Trust Boundaries and Data Flow
+questions:
+- id: ats044-010-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Identify assets, actors and entry points in a Kubernetes design
+  source_readings:
+  - sections/section-010/module-01/course-01-tracing-authority-across-the-platform.md
+  prompt: A team lists the tools in its cluster but writes down no data, identities
+    or interfaces. What does the threat model still need?
+  options:
+  - id: a
+    text: A list of the container image sizes
+    explanation: Image size does not describe who can reach what.
+  - id: b
+    text: Assets, actors and the entry points through which actors reach them
+    explanation: Correct. A threat model describes what can be harmed and how authority
+      reaches it.
+  - id: c
+    text: A statement that every internal caller is trusted
+    explanation: Trust must be scoped to an action, not assumed for all callers.
+  - id: d
+    text: The names of the nodes only
+    explanation: Node names say nothing about assets or access paths.
+  correct_option: b
+  explanation: A threat model is built from assets, actors and entry points, with
+    a trust assumption for each.
+- id: ats044-010-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Remove unneeded workload credentials
+  source_readings:
+  - sections/section-010/module-01/course-02-entry-points-and-workload-credentials.md
+  prompt: The `shuttle` container only sends HTTP requests to Services. It never calls
+    the Kubernetes API. What is the best change to its pod template?
+  options:
+  - id: a
+    text: 'Set `automountServiceAccountToken: false`'
+    explanation: Correct. The workload does not need the credential, so the pod should
+      not hold it.
+  - id: b
+    text: Bind `cluster-admin` so calls never fail
+    explanation: This adds authority that nobody needs.
+  - id: c
+    text: Rename the service account
+    explanation: A new name does not change what the pod can read.
+  - id: d
+    text: Add a longer token lifetime
+    explanation: A longer lifetime makes a stolen token useful for longer.
+  correct_option: a
+  explanation: Removing an unused credential is stronger than detecting its misuse.
+- id: ats044-010-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Remove unneeded workload credentials
+  source_readings:
+  - sections/section-010/module-01/course-02-entry-points-and-workload-credentials.md
+  prompt: Where does the kubelet place the service account token inside a container?
+  options:
+  - id: a
+    text: In the container image layers
+    explanation: The token is created at pod start and is not part of the image.
+  - id: b
+    text: In the pod name
+    explanation: The pod name is not a credential.
+  - id: c
+    text: In etcd on the node only
+    explanation: etcd is on the control plane, and the container reads a file, not
+      etcd.
+  - id: d
+    text: In a projected volume at `/var/run/secrets/kubernetes.io/serviceaccount`
+    explanation: Correct. The directory also holds `ca.crt` and `namespace`.
+  correct_option: d
+  explanation: The kubelet mounts a projected token volume, and any process in the
+    container can read it.
+- id: ats044-010-q04
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Describe the order of API request decisions
+  source_readings:
+  - sections/section-010/module-02/course-01-the-order-of-decisions-on-an-api-request.md
+  prompt: Which order does the API server use for a request that creates an object?
+  options:
+  - id: a
+    text: Admission, authentication, authorization, then storage
+    explanation: Admission needs a known identity and an allowed request first.
+  - id: b
+    text: Authorization, authentication, storage, then admission
+    explanation: Admission runs before the object is stored.
+  - id: c
+    text: Authentication, authorization, admission, then storage in etcd
+    explanation: Correct.
+  - id: d
+    text: Storage in etcd, then authentication
+    explanation: Nothing is stored before the caller is checked.
+  correct_option: c
+  explanation: A request stops at the first stage that rejects it.
+- id: ats044-010-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Tell apart a rejection for identity from one for permission
+  source_readings:
+  - sections/section-010/module-02/course-01-the-order-of-decisions-on-an-api-request.md
+  prompt: A request fails with status 403 and the message names the user `system:serviceaccount:starfleet:shuttle`.
+    What does this tell you?
+  options:
+  - id: a
+    text: The credential is unknown
+    explanation: An unknown credential is a 401, or anonymous access.
+  - id: b
+    text: The identity is known and lacks a permission
+    explanation: Correct. A 403 means authentication worked and authorization refused.
+  - id: c
+    text: An admission policy rejected the object content
+    explanation: Admission failures name the policy or webhook.
+  - id: d
+    text: etcd is unavailable
+    explanation: An unavailable store gives a server error, not a 403.
+  correct_option: b
+  explanation: Read the status and the user name in the message to find the stage
+    that refused.
+- id: ats044-010-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Show that pod traffic has no identity check by default
+  source_readings:
+  - sections/section-010/module-02/course-02-pod-traffic-and-the-network-boundary.md
+  prompt: On a cluster with no NetworkPolicy and no mTLS, a pod in `outpost` sends
+    a request to `probe.starfleet.svc`. What happens?
+  options:
+  - id: a
+    text: The request reaches `probe`, which sees only a source IP address
+    explanation: Correct. A namespace is not a network boundary.
+  - id: b
+    text: The request fails because the namespaces differ
+    explanation: Service names resolve from every namespace and the network allows
+      the traffic.
+  - id: c
+    text: The API server authorizes the request first
+    explanation: Pod traffic does not pass the API server.
+  - id: d
+    text: The request is encrypted and identified by default
+    explanation: Kubernetes does not add mTLS by default.
+  correct_option: a
+  explanation: By default every pod reaches every pod, and the receiver has no verified
+    identity.

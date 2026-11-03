@@ -2,7 +2,7 @@
 
 Official KCSA objectives checked on 2026-10-11. This course covers Kubernetes Threat Model (16%). The six domain weights are 14%, 22%, 22%, 16%, 16% and 10%.
 
-These primary references support author review. Teaching pages are self-contained. This is conceptual reading material; no command execution or runtime verification is claimed.
+These primary references support author review. Teaching pages are self-contained. Commands in lessons and labs follow the official documentation but were not run: no runtime verification is claimed.
 
 - [Official KCSA objectives](https://training.linuxfoundation.org/certification/kubernetes-and-cloud-native-security-associate-kcsa/)
 - [Kubernetes security concepts](https://kubernetes.io/docs/concepts/security/)

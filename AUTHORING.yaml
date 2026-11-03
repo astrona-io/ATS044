@@ -1,5 +1,5 @@
 version: 1
-approval: KCSA-LESSON-PLAN.md approved; reading-only correction 2026-10-11
+approval: KCSA-LESSON-PLAN.md approved; labs, playgrounds, capstones and section quizzes approved by the maintainer 2026-11-03 (overrides the earlier reading-only correction)
 course:
   id: ATS044
   certification:
@@ -17,10 +17,10 @@ course:
     - Access to Sensitive Data
     - Privilege Escalation
 defaults:
-  playground: false
-  module_lab: false
-  capstone: false
-  section_quiz: false
+  playground: true
+  module_lab: true
+  capstone: true
+  section_quiz: true
   final_quiz: true
 sections:
 - id: section-010
@@ -36,11 +36,11 @@ sections:
     - Relate each boundary to preventive and detective controls.
     outline:
     - Tracing Authority Across The Platform
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     diagrams: []
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
 - id: section-020
   title: Persistence
   curriculum_item: Persistence
@@ -54,10 +54,10 @@ sections:
     - Describe recovery that restores inputs and revokes authority.
     outline:
     - What Can Survive A Container Replacement
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     diagrams: []
-  capstone: false
+  capstone: true
   section_quiz: true
 - id: section-030
   title: Denial of Service
@@ -72,11 +72,11 @@ sections:
     - Relate recovery capacity and evidence to service availability.
     outline:
     - Bounding Work Without Assuming Perfect Availability
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     diagrams: []
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
 - id: section-040
   title: Malicious Code Execution and Compromised Applications in Containers
   curriculum_item: Malicious Code Execution and Compromised Applications in Containers
@@ -90,11 +90,11 @@ sections:
     - Describe evidence and trusted recovery for an affected workload.
     outline:
     - From Application Authority To Broader Impact
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     diagrams: []
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
 - id: section-050
   title: Attacker on the Network
   curriculum_item: Attacker on the Network
@@ -109,10 +109,10 @@ sections:
     outline:
     - Protecting Communication From The Correct Boundary
     - Network Reachability And Request Evidence
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     diagrams: []
-  capstone: false
+  capstone: true
   section_quiz: true
 - id: section-060
   title: Access to Sensitive Data
@@ -127,11 +127,11 @@ sections:
     - Describe revocation and recovery after credential disclosure.
     outline:
     - Finding Every Reader And Copy
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     diagrams: []
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
 - id: section-070
   title: Privilege Escalation
   curriculum_item: Privilege Escalation
@@ -145,9 +145,9 @@ sections:
     - Explain why effective permission review includes alternate paths.
     outline:
     - Reviewing The Authority A Permission Enables
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     diagrams: []
-  capstone: false
+  capstone: true
   section_quiz: true
 assessment_format: YAML question banks, schema version 1; indexed in assessments/index.yaml

@@ -43,6 +43,83 @@ For each path, describe a possible misuse and consequence. A stolen deployment c
 
 Document assumptions such as trusted node hosts, controlled label ownership and an enforcing network implementation. Then identify what changes if an assumption fails. A diagram is useful only when it exposes those relationships and supports concrete control decisions.
 
+## Taking An Inventory In The Playground
+
+A threat model is only useful when it matches the real cluster. The fastest way to check it is to ask the cluster itself. The commands below are read-only, so you can run them in any order. Each one answers one question about assets, actors or entry points.
+
+<!-- astrona:playground:renew -->
+List the namespaces first. Each namespace is a scope for names and for most permissions, so it is the first place an inventory of actors starts:
+
+```sh
+kubectl get namespaces
+```
+
+You should see the namespaces `starfleet` and `outpost` next to the system ones such as `kube-system`. Next, list the identities that workloads can use in `starfleet`:
+
+```sh
+kubectl get serviceaccounts -n starfleet
+```
+
+Every workload (`scout`, `probe`, `shuttle`) has its own service account, and Kubernetes also creates a `default` service account in each namespace. A pod that names no service account runs as `default`.
+
+The control components are assets too. On a kind cluster they run as static pods in `kube-system`:
+
+```sh
+kubectl get pods -n kube-system -o wide
+```
+
+You should see the `kube-apiserver`, `etcd`, `kube-controller-manager` and `kube-scheduler` pods on the control-plane node. The API server is the only component that talks to etcd, the key-value store that holds every object. If an attacker reads etcd, the attacker reads every Secret that is not encrypted at rest.
+
+To see what an actor may do, ask the API server what the `shuttle` service account is allowed to do:
+
+```sh
+kubectl auth can-i --list --as=system:serviceaccount:starfleet:shuttle -n starfleet
+```
+
+The list is short. It shows the discovery rights every authenticated identity receives and nothing that touches Secrets. The list is the actor's authority on the API entry point, and it is the first thing to record in the model.
+
+## What The Inventory Gives You
+
+The commands above produce four lists: namespaces, service accounts, control components and permissions. Put them in one table and add a column that names the trust assumption for each row. For example, a row can say "`shuttle` is trusted to read its own pods, and nothing else". A table like this is the smallest useful threat model, and every later step adds rows to it.
+
+## Taking An Inventory In The Playground
+
+A threat model is only useful when it matches the real cluster. The fastest way to check it is to ask the cluster itself. The commands below are read-only, so you can run them in any order. Each one answers one question about assets, actors or entry points.
+
+List the namespaces first. Each namespace is a scope for names and for most permissions, so it is the first place an inventory of actors starts:
+
+```sh
+kubectl get namespaces
+```
+
+You should see the namespaces `starfleet` and `outpost` next to the system ones such as `kube-system`. Next, list the identities that workloads can use in `starfleet`:
+
+```sh
+kubectl get serviceaccounts -n starfleet
+```
+
+Every workload (`scout`, `probe`, `shuttle`) has its own service account, and Kubernetes also creates a `default` service account in each namespace. A pod that names no service account runs as `default`.
+
+The control components are assets too. On a kind cluster they run as static pods in `kube-system`:
+
+```sh
+kubectl get pods -n kube-system -o wide
+```
+
+You should see the `kube-apiserver`, `etcd`, `kube-controller-manager` and `kube-scheduler` pods on the control-plane node. The API server is the only component that talks to etcd, the key-value store that holds every object. If an attacker reads etcd, the attacker reads every Secret that is not encrypted at rest.
+
+To see what an actor may do, ask the API server what the `shuttle` service account is allowed to do:
+
+```sh
+kubectl auth can-i --list --as=system:serviceaccount:starfleet:shuttle -n starfleet
+```
+
+The list is short. It shows the discovery rights every authenticated identity receives and nothing that touches Secrets. The list is the actor's authority on the API entry point, and it is the first thing to record in the model.
+
+## What The Inventory Gives You
+
+The commands above produce four lists: namespaces, service accounts, control components and permissions. Put them in one table and add a column that names the trust assumption for each row. For example, a row can say "`shuttle` is trusted to read its own pods, and nothing else". A table like this is the smallest useful threat model, and every later step adds rows to it.
+
 ## Common pitfalls
 
 > [!WARNING]

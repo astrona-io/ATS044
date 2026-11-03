@@ -5,20 +5,23 @@ exam_objectives:
 ---
 # Sensitive Data Access Paths
 
-This module develops the reasoning needed to identify sensitive data in live resources, mounted files and retained copies.
+A Secret is only one place where sensitive data lives. Values also appear in environments, mounted files, logs and backups, and many identities can read them through direct and indirect permissions. This module lists every copy and every reader of a credential and then tests who can read it.
 
 ## Learning Goals
 
-- Identify sensitive data in live resources, mounted files and retained copies.
-- Distinguish encoding, encryption and authorized plaintext access.
-- Trace diagnostic and indirect permission exposure.
-- Describe revocation and recovery after credential disclosure.
+- Find sensitive data in live resources, mounted files and retained copies.
+- Explain why base64 is encoding and not encryption.
+- List the identities that can read a Secret directly.
+- Find indirect routes to the same data, such as exec, logs and pod creation.
 
 ## Before You Start
 
-Read the examples as descriptions of system behavior. No cluster, account, laboratory or installed tool is required. Technical terms are defined where they are used.
+You need Kubernetes basics: namespaces, pods, Deployments and `kubectl get`. The playground is a kind cluster running Kubernetes 1.35 with the example workloads `scout`, `probe` and `shuttle` in `starfleet` and `drifter` in `outpost`, each on its own service account. You run every command as the cluster administrator and test other identities with `--as`. The playground adds two Secrets, `report-db` and `shuttle-token`, and a Role that lets the service account of `shuttle` read every Secret in `starfleet`.
 
 ## Reading Order
 
-1. Finding Every Reader And Copy
-2. Summary
+The first part decodes a Secret and finds the identities that can read it directly. The second part finds the indirect routes and the retained copies. A graded task follows the second part.
+
+Start your playground now and keep it running while you read:
+
+<!-- astrona:playground -->

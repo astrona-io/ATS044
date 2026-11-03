@@ -1,0 +1,149 @@
+# Knowledge check for section 070. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats044-070
+course_id: ATS044
+exam_code: KCSA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-070
+  title: Privilege Escalation
+questions:
+- id: ats044-070-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Find the real reach of a permission
+  source_readings:
+  - sections/section-070/module-01/course-01-reviewing-the-authority-a-permission-enables.md
+  prompt: Which command shows what a service account may actually do in a namespace?
+  options:
+  - id: a
+    text: kubectl get serviceaccount NAME
+    explanation: It shows the object and not its rights.
+  - id: b
+    text: kubectl auth can-i --list --as=system:serviceaccount:NAMESPACE:NAME -n NAMESPACE
+    explanation: Correct. The API server answers with the effective rights.
+  - id: c
+    text: kubectl describe node
+    explanation: It shows node data.
+  - id: d
+    text: kubectl get events
+    explanation: It shows events and not rights.
+  correct_option: b
+  explanation: Read the answers and not the role names.
+- id: ats044-070-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Identify verbs that move authority
+  source_readings:
+  - sections/section-070/module-01/course-01-reviewing-the-authority-a-permission-enables.md
+  prompt: Which permission lets an identity send requests as another identity?
+  options:
+  - id: a
+    text: impersonate on users, groups or serviceaccounts
+    explanation: Correct. The caller then holds the authority of the identity.
+  - id: b
+    text: get on pods
+    explanation: It reads pods.
+  - id: c
+    text: list on namespaces
+    explanation: It lists namespaces.
+  - id: d
+    text: patch on deployments
+    explanation: It changes Deployments.
+  correct_option: a
+  explanation: Other verbs that move authority are bind, escalate and role or binding
+    changes.
+- id: ats044-070-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain the reach of pod creation
+  source_readings:
+  - sections/section-070/module-01/course-02-workload-creation-and-host-interfaces.md
+  prompt: An identity can create Deployments but cannot create pods. What does it
+    follow?
+  options:
+  - id: a
+    text: It cannot run any workload
+    explanation: The controller creates pods on its behalf.
+  - id: b
+    text: It can only run pods in other namespaces
+    explanation: Pods are created in the namespace of the Deployment.
+  - id: c
+    text: It is limited to read-only pods
+    explanation: No such limit exists.
+  - id: d
+    text: It can still choose what pods run, because the controller creates them
+    explanation: Correct. The pod template carries the specification.
+  correct_option: d
+  explanation: Count the identities with create on pods and on controllers.
+- id: ats044-070-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Name the fields that reach the host
+  source_readings:
+  - sections/section-070/module-01/course-02-workload-creation-and-host-interfaces.md
+  prompt: Which pod field gives a container access to the file system of the node?
+  options:
+  - id: a
+    text: A readiness probe
+    explanation: It checks health.
+  - id: b
+    text: An emptyDir volume
+    explanation: It is private pod storage.
+  - id: c
+    text: A hostPath volume
+    explanation: Correct. It mounts a node directory into the container.
+  - id: d
+    text: A resource limit
+    explanation: It limits resources.
+  correct_option: c
+  explanation: Host namespaces and privileged mode also weaken the boundary.
+- id: ats044-070-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Write a narrow role
+  source_readings:
+  - sections/section-070/module-02/course-01-narrowing-a-role-to-its-task.md
+  prompt: A job only sets the image of Deployments. Which rule fits the task?
+  options:
+  - id: a
+    text: apiGroups *, resources *, verbs *
+    explanation: This grants everything.
+  - id: b
+    text: apiGroups apps, resources deployments, verbs get, list and patch
+    explanation: Correct. It covers the task and nothing else.
+  - id: c
+    text: resources pods, verbs create
+    explanation: It lets the job choose what pods run.
+  - id: d
+    text: resources rolebindings, verbs create
+    explanation: It lets the job hand out authority.
+  correct_option: b
+  explanation: Prove the result with can-i.
+- id: ats044-070-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Apply Pod Security Admission
+  source_readings:
+  - sections/section-070/module-02/course-02-admission-and-protecting-the-controls.md
+  prompt: A namespace carries the label pod-security.kubernetes.io/enforce=baseline.
+    What happens to a privileged pod that already runs there?
+  options:
+  - id: a
+    text: It keeps running, and a new privileged pod is rejected
+    explanation: Correct. Enforcement applies to new pods.
+  - id: b
+    text: It is stopped at once
+    explanation: Admission does not stop running pods.
+  - id: c
+    text: It is moved to another namespace
+    explanation: No such step exists.
+  - id: d
+    text: It is changed to unprivileged
+    explanation: Admission does not edit running pods.
+  correct_option: a
+  explanation: Use warn and audit first to find what would fail.

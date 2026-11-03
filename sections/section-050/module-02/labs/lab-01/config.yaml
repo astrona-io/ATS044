@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Default Deny With An Explicit Allow (LAB). Graded against the live cluster. Status: UNTESTED (static checks only).
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-044-lab-050-02
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+    nodes:
+      workers: 1
+    addons:
+      cni: calico
+
+# Starting state: the Starfleet workloads plus the faults of this task. The faults stay in place on purpose.
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faulty starting state
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+
+validation:
+  scripts:
+    - name: default-deny-exists
+      description: starfleet has a default-deny ingress policy
+      type: file
+      source: validation/validate-default-deny-exists.sh
+      hint: Create a NetworkPolicy with podSelector {} and policyTypes Ingress and no ingress rules.
+    - name: shuttle-reaches-scout
+      description: shuttle can reach scout
+      type: file
+      source: validation/validate-shuttle-reaches-scout.sh
+      hint: Allow ingress to app=scout from app=shuttle on port 9898.
+    - name: drifter-blocked
+      description: drifter cannot reach scout
+      type: file
+      source: validation/validate-drifter-blocked.sh
+      hint: Do not allow the outpost namespace to reach scout.
+    - name: probe-blocked
+      description: shuttle cannot reach probe
+      type: file
+      source: validation/validate-probe-blocked.sh
+      hint: Add no allow rule for probe.
+    - name: workloads-available
+      description: The example Deployments are available
+      type: file
+      source: validation/validate-workloads-available.sh
+      hint: Do not delete or scale the workloads.
+
+teardown:
+  keepCluster: false

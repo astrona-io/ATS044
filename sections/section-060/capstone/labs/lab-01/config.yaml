@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Sensitive Data Capstone (LAB). Graded against the live cluster. Status: UNTESTED (static checks only).
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-044-capstone-060
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+# Starting state: the Starfleet workloads plus the faults of this task. The faults stay in place on purpose.
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the workloads and the faulty starting state
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+
+validation:
+  scripts:
+    - name: shuttle-secret-access-narrowed
+      description: shuttle cannot list Secrets or read report-db
+      type: file
+      source: validation/validate-shuttle-secret-access-narrowed.sh
+      hint: Limit the Role to get on shuttle-token with resourceNames.
+    - name: shuttle-keeps-its-token
+      description: shuttle can still read shuttle-token
+      type: file
+      source: validation/validate-shuttle-keeps-its-token.sh
+      hint: The new rule must still allow get on shuttle-token.
+    - name: probe-env-secret-removed
+      description: probe takes no value from a Secret through an environment variable
+      type: file
+      source: validation/validate-probe-env-secret-removed.sh
+      hint: Remove the DB_PASSWORD entry from the container env.
+    - name: probe-secret-mounted-readonly
+      description: probe mounts report-db read-only and is rolled out
+      type: file
+      source: validation/validate-probe-secret-mounted-readonly.sh
+      hint: Add a secret volume and a readOnly volumeMount.
+    - name: workloads-available
+      description: The example Deployments are available
+      type: file
+      source: validation/validate-workloads-available.sh
+      hint: Do not delete or scale the workloads.
+
+teardown:
+  keepCluster: false

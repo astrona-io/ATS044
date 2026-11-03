@@ -40,6 +40,52 @@ An HTTP response moves the investigation further into application or intermediar
 
 After correction, verify through the original caller's namespace, identity and route. A test from another source can bypass the policy or naming rule that caused the problem. The full request path matters because restoring one stage is useful only when the intended operation can traverse the remaining stages too.
 
+## Running The Checks In The Playground
+
+The playground has a Service `radar` in `starfleet` that clients cannot reach. Work through the stages in order with the client that has the problem, which is `shuttle`.
+
+<!-- astrona:playground:renew -->
+Stage 1 is name resolution. Resolve the name from the client pod:
+
+```sh
+kubectl exec -n starfleet deploy/shuttle -- sh -c 'curl -sS -m 5 -o /dev/null http://radar/healthz; echo "exit=$?"'
+```
+
+The exit code tells the stage that failed. Code `6` means the name did not resolve. Code `7` means the connection was refused. Code `28` means a timeout. Any HTTP status in the output means the connection worked and the application or a proxy answered. Stage 2 is the endpoints of the Service. A Service sends traffic only to ready pods that match its selector:
+
+```sh
+kubectl get endpoints radar -n starfleet
+kubectl get service radar -n starfleet -o jsonpath='{.spec.selector} {.spec.ports}{"\n"}'
+```
+
+An empty `ENDPOINTS` column means that no ready pod matches the selector. Compare the selector with the labels of the pods:
+
+```sh
+kubectl get pods -n starfleet --show-labels
+```
+
+Stage 3 is the port mapping. The `targetPort` of the Service must be the port on which the container listens. Compare it with the container port:
+
+```sh
+kubectl get deployment radar -n starfleet -o jsonpath='{.spec.template.spec.containers[0].ports}{"\n"}'
+```
+
+Fix each fault that you find and repeat the request from the same client. The graded task on the next page uses this same fault.
+
+## Verify From The Affected Client
+
+After a fix, run the original request again from `shuttle` and read the exit code and the status. A different client can pass while the affected client still fails, because routes, namespaces and policies can differ. Also check the endpoints list again, because a rollout can change it. A fix is complete when the original symptom is gone for the original caller and when the endpoints show at least one ready pod.
+
+## Reading The Events
+
+When pods do not become ready, Kubernetes records the reason as events. Read the events of the namespace in time order:
+
+```sh
+kubectl get events -n starfleet --sort-by=.lastTimestamp
+```
+
+Readiness probe failures, image pull problems and scheduling errors appear here. A pod that is not ready is removed from the endpoints of its Service, so an event about readiness often explains an empty endpoints list.
+
 ## Common pitfalls
 
 > [!WARNING]

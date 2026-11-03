@@ -1,0 +1,150 @@
+# Knowledge check for section 060. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats044-060
+course_id: ATS044
+exam_code: KCSA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-060
+  title: Access to Sensitive Data
+questions:
+- id: ats044-060-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain base64 in a Secret
+  source_readings:
+  - sections/section-060/module-01/course-01-finding-every-reader-and-copy.md
+  prompt: What protection does the base64 form of a Secret value give?
+  options:
+  - id: a
+    text: It encrypts the value with the cluster key
+    explanation: Encryption at rest is a separate feature.
+  - id: b
+    text: None. Anyone who can read the object can decode it
+    explanation: Correct. Base64 is encoding and uses no key.
+  - id: c
+    text: It hides the value from users with get access
+    explanation: A reader with get receives the value and decodes it.
+  - id: d
+    text: It prevents the value from appearing in logs
+    explanation: Base64 does not affect logs.
+  correct_option: b
+  explanation: Base64 only writes bytes as text.
+- id: ats044-060-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Identify verbs that read Secret values
+  source_readings:
+  - sections/section-060/module-01/course-01-finding-every-reader-and-copy.md
+  prompt: Which permission lets an identity read the value of every Secret in a namespace?
+  options:
+  - id: a
+    text: list on secrets
+    explanation: Correct. List returns the full objects with their data.
+  - id: b
+    text: get on pods
+    explanation: That reads pod objects only.
+  - id: c
+    text: create on configmaps
+    explanation: That writes ConfigMaps.
+  - id: d
+    text: get on namespaces
+    explanation: That reads the namespace object.
+  correct_option: a
+  explanation: Name objects with resourceNames and give only get.
+- id: ats044-060-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Find indirect routes to a Secret value
+  source_readings:
+  - sections/section-060/module-01/course-02-indirect-readers-and-retained-copies.md
+  prompt: An identity has no permission on Secrets but can create pods in the namespace.
+    What can it do?
+  options:
+  - id: a
+    text: Nothing, because pods cannot use Secrets
+    explanation: Pods mount Secrets in the normal way.
+  - id: b
+    text: Read only the Secret names
+    explanation: The pod can read the values.
+  - id: c
+    text: Read Secrets in other namespaces
+    explanation: A pod mounts Secrets of its own namespace only.
+  - id: d
+    text: Start a pod that mounts a Secret and prints its value
+    explanation: Correct. The kubelet delivers the value to the container.
+  correct_option: d
+  explanation: Create on pods is close to read on Secrets.
+- id: ats044-060-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Locate copies outside the Secret
+  source_readings:
+  - sections/section-060/module-01/course-02-indirect-readers-and-retained-copies.md
+  prompt: Which setting writes the body of a Secret-creating request into the audit
+    log?
+  options:
+  - id: a
+    text: An audit policy level of Metadata
+    explanation: Metadata records who and what, not the body.
+  - id: b
+    text: Encryption at rest
+    explanation: It protects stored data and not the audit log.
+  - id: c
+    text: An audit policy level of Request or RequestResponse
+    explanation: Correct. These levels record the request body.
+  - id: d
+    text: A read-only mount
+    explanation: It affects a container volume.
+  correct_option: c
+  explanation: Use Metadata for Secrets.
+- id: ats044-060-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Compare environment variables and files
+  source_readings:
+  - sections/section-060/module-02/course-01-delivering-a-secret-to-one-process.md
+  prompt: Which statement about delivering a Secret as a mounted file is correct?
+  options:
+  - id: a
+    text: The file is visible to every process in the cluster
+    explanation: Only processes that can open it in the container read it.
+  - id: b
+    text: The kubelet updates the file after the Secret changes, unless it is mounted
+      with subPath
+    explanation: Correct. An environment variable never changes in a running container.
+  - id: c
+    text: The file always shows the old value until a node restart
+    explanation: The kubelet syncs the file regularly.
+  - id: d
+    text: The file cannot have a mode
+    explanation: defaultMode sets it.
+  correct_option: b
+  explanation: A file is the better default delivery.
+- id: ats044-060-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe the steps of a rotation
+  source_readings:
+  - sections/section-060/module-02/course-02-rotating-and-revoking-a-credential.md
+  prompt: A team changes the value in the Secret after an exposure and does nothing
+    else. What is the state of the credential?
+  options:
+  - id: a
+    text: The old value still works at the issuer and running pods keep it
+    explanation: Correct. The issuer must revoke it and consumers must reload.
+  - id: b
+    text: The old value is revoked
+    explanation: Only the issuer revokes a credential.
+  - id: c
+    text: Running pods receive the new environment value at once
+    explanation: An environment variable does not change while the container runs.
+  - id: d
+    text: The old value stays valid for exactly one hour
+    explanation: No such rule exists.
+  correct_option: a
+  explanation: Create, store, move consumers, revoke.
