@@ -1,6 +1,6 @@
 schema_version: 1
 course_id: ATS044
-status: draft
+status: alpha
 banks:
 - id: ats044-section-020
   path: sections/section-020/questions.yaml
