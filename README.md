@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://astrona.io/courses/kubernetes-and-cloud-native-security-associate-kcsa">
+    <img src="https://astrona.io/courses/kubernetes-and-cloud-native-security-associate-kcsa/domains/ATS044.svg" alt="ATS044: Kubernetes Threat Model, part of the Kubernetes and Cloud Native Security Associate course on Astrona" width="100%">
+  </a>
+</p>
+
 # Kubernetes Threat Model (ATS044)
 
 Kubernetes and Cloud Native Associate (KCSA) — Kubernetes Threat Model, 16% of the published curriculum. This course is part of ATP009.
